@@ -14,7 +14,7 @@ interface ITaskListProps {
 }
 
 const TaskList: React.FC<ITaskListProps> = props => {
-	const { list, handleRemoveTask } = props
+	const { list = [], handleRemoveTask } = props
 	return (
 		<List className={styles.root}>
 			{list.map(item => (

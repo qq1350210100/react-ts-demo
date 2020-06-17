@@ -2,6 +2,7 @@ import React from 'react'
 import styles from './styles/index.module.scss'
 import TaskList from './TaskList'
 import TaskInput from './TaskInput'
+import { Button } from 'antd'
 
 interface ITodoListProps {}
 
@@ -46,10 +47,10 @@ const TodoList: React.FC<ITodoListProps> = () => {
 		setList(nextList)
 	}, [])
 
-	const handleInput = React.useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+	const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const value = e.target.value
 		setInputVal(value)
-	}, [])
+	}
 
 	const handleAddTask = React.useCallback(() => {
 		if (!inputVal.trim()) {
@@ -73,8 +74,13 @@ const TodoList: React.FC<ITodoListProps> = () => {
 		})
 	}, [])
 
+	const handleConsole = () => {
+		console.log('11111')
+	}
+
 	return (
 		<div className={styles.root}>
+			<Button onBlur={handleConsole}>Test</Button>
 			<TaskInput inputVal={inputVal} handleInput={handleInput} handleAddTask={handleAddTask} />
 			<TaskList list={list} handleRemoveTask={handleRemoveTask} />
 		</div>
