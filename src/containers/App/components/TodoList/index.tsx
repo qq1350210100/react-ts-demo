@@ -2,7 +2,6 @@ import React from 'react'
 import styles from './styles/index.module.scss'
 import TaskList from './TaskList'
 import TaskInput from './TaskInput'
-import { Button } from 'antd'
 
 interface ITodoListProps {}
 
@@ -24,7 +23,7 @@ function useCount(defaultCount: number) {
 }
 
 const TodoList: React.FC<ITodoListProps> = () => {
-	const [inputVal, setInputVal] = React.useState('')
+	const [inputVal, setInputVal] = React.useState<string>('')
 	const [list, setList] = React.useState<ListItem[]>([])
 	const { count, increase } = useCount(0)
 
@@ -74,13 +73,8 @@ const TodoList: React.FC<ITodoListProps> = () => {
 		})
 	}, [])
 
-	const handleConsole = () => {
-		console.log('11111')
-	}
-
 	return (
 		<div className={styles.root}>
-			<Button onBlur={handleConsole}>Test</Button>
 			<TaskInput inputVal={inputVal} handleInput={handleInput} handleAddTask={handleAddTask} />
 			<TaskList list={list} handleRemoveTask={handleRemoveTask} />
 		</div>

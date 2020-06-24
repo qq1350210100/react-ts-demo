@@ -3,13 +3,13 @@ import styles from './styles/task-list.module.scss'
 import { List } from 'antd'
 import { CloseOutlined } from '@ant-design/icons'
 
-interface ListItem {
+interface IListItem {
 	id: number
 	value: string
 }
 
 interface ITaskListProps {
-	list: ListItem[]
+	list: IListItem[]
 	handleRemoveTask: (id: number) => void
 }
 

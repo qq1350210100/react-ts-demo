@@ -3,7 +3,7 @@ import { makeStyles, createStyles } from '@material-ui/styles'
 import clsx from 'clsx'
 import { ThemeNames, IColors, selectColor } from 'common/themeColors'
 
-interface IRippleProps {
+export interface IRippleProps {
 	rippleX: number
 	rippleY: number
 	rippleSize: number
@@ -15,7 +15,7 @@ interface IRippleProps {
 
 interface IStyleProps {
 	styles: Rect | object
-	timeout?: number
+	timeout: number
 	color: IColors
 }
 
@@ -28,7 +28,7 @@ interface Rect {
 
 const useStyles = makeStyles(
 	createStyles({
-		root: ({ styles }: IStyleProps) => ({
+		ripple: ({ styles }: IStyleProps) => ({
 			position: 'absolute',
 			...styles
 		}),
@@ -40,11 +40,11 @@ const useStyles = makeStyles(
 			background: ({ color }) => color.ripple
 		},
 		enter: {
-			animation: '$kf_enter ease-in-out forwards',
+			animation: '$kf_enter ease-out forwards',
 			animationDuration: ({ timeout }) => `${timeout}ms`
 		},
 		leave: {
-			animation: '$kf_leave ease-in-out forwards',
+			animation: '$kf_leave ease-out forwards',
 			animationDuration: ({ timeout }) => `${timeout}ms`
 		},
 		'@keyframes kf_enter': {
@@ -86,7 +86,7 @@ const Ripple: React.FC<IRippleProps> = props => {
 		top: rippleY - rippleSize / 2
 	}
 
-	const [leave, setLeave] = React.useState(false)
+	const [leave, setLeave] = React.useState<boolean>(false)
 	const styleProps: IStyleProps = { styles, timeout, color: selectColor(color) }
 	const classes = useStyles(styleProps)
 
@@ -103,7 +103,7 @@ const Ripple: React.FC<IRippleProps> = props => {
 	}, [visible, onExited, timeout])
 
 	return (
-		<span className={clsx(classes.root, classes.enter)}>
+		<span className={clsx(classes.ripple, classes.enter)}>
 			<span className={clsx(classes.child, leave && classes.leave)}></span>
 		</span>
 	)

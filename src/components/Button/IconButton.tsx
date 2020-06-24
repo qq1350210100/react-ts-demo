@@ -2,14 +2,15 @@ import React from 'react'
 import clsx from 'clsx'
 import { makeStyles, createStyles } from '@material-ui/styles'
 import { ThemeNames, IColors, selectColor } from 'common/themeColors'
+import TouchRipple from '../TouchRipple'
 
 export interface IStyleProps {
 	color: IColors
-	focus?: boolean
-	disabled?: boolean
+	focus: boolean
+	disabled: boolean
 }
 
-export interface IIconButtonProps extends React.ButtonHTMLAttributes<any> {
+export interface IIconButtonProps extends React.ButtonHTMLAttributes<HTMLElement> {
 	className?: string
 	color?: string
 	focus?: boolean
@@ -18,7 +19,7 @@ export interface IIconButtonProps extends React.ButtonHTMLAttributes<any> {
 
 const useStyles = makeStyles(
 	createStyles({
-		root: ({ color, focus, disabled }: IStyleProps) => ({
+		iconBtn: ({ color, focus, disabled }: IStyleProps) => ({
 			display: 'flex',
 			alignItems: 'center',
 			justifyContent: 'center',
@@ -43,7 +44,7 @@ const useStyles = makeStyles(
 	})
 )
 
-const IconButton: React.FC<IIconButtonProps> = props => {
+const _IconButton: React.ForwardRefRenderFunction<unknown, IIconButtonProps> = (props, ref) => {
 	const {
 		children,
 		className,
@@ -54,13 +55,24 @@ const IconButton: React.FC<IIconButtonProps> = props => {
 	} = props
 	const stylesProps: IStyleProps = { color: selectColor(color), focus, disabled }
 	const classes = useStyles(stylesProps)
-	const btnCls = clsx(classes.root, className)
+	const { rippleRef, handleStart, handleStop } = TouchRipple.useRipple()
+	const btnCls = clsx(classes.iconBtn, className)
 
 	return (
-		<button type="button" {...rest} className={btnCls}>
+		<div
+			{...rest}
+			ref={ref as any}
+			className={btnCls}
+			onMouseDown={handleStart}
+			onMouseUp={handleStop}
+			onMouseLeave={handleStop}
+		>
+			<TouchRipple ref={rippleRef} color={color} centered timeout={500} />
 			{children}
-		</button>
+		</div>
 	)
 }
+
+const IconButton = React.forwardRef<unknown, IIconButtonProps>(_IconButton)
 
 export default React.memo(IconButton)

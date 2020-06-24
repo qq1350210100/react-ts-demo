@@ -6,7 +6,7 @@ export interface IUseRipple {
 
 export interface IUseRippleReturn {
 	rippleRef: React.RefObject<any>
-	handleStart: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void | null
+	handleStart: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void | null
 	handleStop: () => void | null
 }
 
@@ -15,7 +15,6 @@ export interface IUseRippleReturn {
  * @param {boolean} muted 是否禁用
  */
 export const useRipple: IUseRipple = (muted = false) => {
-	
 	const rippleRef: React.MutableRefObject<any> = React.useRef()
 
 	const handleStart = React.useCallback(e => (muted ? null : rippleRef.current.start(e)), [muted])

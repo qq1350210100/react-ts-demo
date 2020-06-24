@@ -1,17 +1,7 @@
 import React from 'react'
 import { makeStyles, createStyles } from '@material-ui/styles'
 import { TransitionGroup } from 'react-transition-group'
-import Ripple from './Ripple'
-
-interface IRippleProps {
-	rippleX: number
-	rippleY: number
-	rippleSize: number
-	in?: boolean
-	onExited?: () => void
-	timeout?: number
-	color?: string
-}
+import Ripple, { IRippleProps } from './Ripple'
 
 interface Rect {
 	width: number
@@ -28,7 +18,7 @@ export interface ITouchRippleProps extends React.RefAttributes<HTMLElement> {
 
 const useStyles = makeStyles(
 	createStyles({
-		root: {
+		touchRipple: {
 			overflow: 'hidden',
 			pointerEvents: 'none',
 			position: 'absolute',
@@ -112,7 +102,7 @@ const _TouchRipple: React.ForwardRefRenderFunction<unknown, ITouchRippleProps> =
 	React.useImperativeHandle(ref, () => ({ start, stop }), [start, stop])
 
 	return (
-		<span ref={container} className={classes.root}>
+		<span ref={container} className={classes.touchRipple}>
 			<TransitionGroup component={null}>{ripples}</TransitionGroup>
 		</span>
 	)

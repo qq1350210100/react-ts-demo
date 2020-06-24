@@ -15,11 +15,11 @@ export interface IColors {
 	readonly ripple: string
 }
 
-export interface Themes {
+export interface IThemes {
 	readonly [key: string]: IColors
 }
 
-const themeColors: Themes = {
+const themeColors: IThemes = {
 	default: {
 		name: 'default',
 		main: '#f4f4f5',

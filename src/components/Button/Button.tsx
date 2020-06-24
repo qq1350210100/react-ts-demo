@@ -4,7 +4,7 @@ import { makeStyles, createStyles } from '@material-ui/styles'
 import { ThemeNames, IColors, selectColor } from 'common/themeColors'
 import TouchRipple from '../TouchRipple'
 
-export interface IButtonProps extends React.ButtonHTMLAttributes<any> {
+export interface IButtonProps extends React.ButtonHTMLAttributes<HTMLElement> {
 	className?: string
 	color?: string
 	disabled?: boolean
@@ -12,12 +12,12 @@ export interface IButtonProps extends React.ButtonHTMLAttributes<any> {
 
 interface IStyleProps {
 	color: IColors
-	disabled?: boolean
+	disabled: boolean
 }
 
 const useStyles = makeStyles(
 	createStyles({
-		root: ({ color, disabled }: IStyleProps) => ({
+		btn: ({ color, disabled }: IStyleProps) => ({
 			boxSizing: 'border-box',
 			display: 'inline-block',
 			position: 'relative',
@@ -50,7 +50,7 @@ const Button: React.FC<IButtonProps> = props => {
 	const stylesProps: IStyleProps = { color: selectColor(color), disabled }
 	const classes = useStyles(stylesProps)
 	const { rippleRef, handleStart, handleStop } = TouchRipple.useRipple()
-	const btnCls = clsx(classes.root, className)
+	const btnCls = clsx(classes.btn, className)
 
 	return (
 		<button
