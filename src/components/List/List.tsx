@@ -21,7 +21,7 @@ const useStyles = makeStyles(
 			margin: 0,
 			padding: 0,
 			border: ({ bordered }: IStyleProps): string => (bordered ? '1px solid #dadce0' : '0px'),
-			borderRadius: 2
+			borderRadius: 4
 		}
 	})
 )

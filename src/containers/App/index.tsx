@@ -30,8 +30,8 @@ const App: React.FC<IAppProps> = () => {
 	}
 	return (
 		<div className={classes.app}>
-			<TodoList />
-			{/* <Button color="primary" onClick={handleConsole} onMouseEnter={handleEnter}>
+			{/* <TodoList /> */}
+			<Button color="primary" onClick={handleConsole} onMouseEnter={handleEnter}>
 				测试按钮
 			</Button>
 			<Button.Icon><UserOutlined /></Button.Icon>
@@ -40,9 +40,9 @@ const App: React.FC<IAppProps> = () => {
 				<List.Item>sdfdsff</List.Item>
 				<List.Item>sdfdsff</List.Item>
 				<List.Item>sdfdsff</List.Item>
-			</List> */}
+			</List>
 
-			{/* <Input placeholder="Basic" type="search" /> */}
+			<Input placeholder="Basic" type="search" />
 		</div>
 	)
 }

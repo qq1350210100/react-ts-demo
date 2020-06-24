@@ -4,6 +4,7 @@ import clsx from 'clsx'
 import { SearchOutlined } from '@ant-design/icons'
 import { hex2Rgba } from 'utils'
 import { ThemeNames, IColors, selectColor } from 'common/themeColors'
+import InputBase from './InputBase'
 
 interface IInputProps extends React.HTMLAttributes<HTMLElement> {
 	className?: string
@@ -40,23 +41,11 @@ const useStyles = makeStyles(
 			position: 'relative'
 		},
 		input: ({ color, focus, disabled, type }: IStyleProps) => ({
-			boxSizing: 'border-box',
-			width: '100%',
-			height: '100%',
-			color: '#303133',
-			background: '#fcfcfc',
-			paddingLeft: 8,
 			paddingRight: type === 'search' ? 32 : 8,
-			borderRadius: 2,
-			outline: 0,
 			border: `1px solid ${focus ? color.main : '#e5e5e5'}`,
 			boxShadow: `0 0 0 ${focus ? '2px' : '6px'} ${hex2Rgba(color.main, focus ? 0.7 : 0)}`,
 			opacity: disabled ? 0.5 : 1,
-			cursor: disabled ? 'not-allowed' : 'default',
-			transition: 'all 250ms ease-out',
-			'&::placeholder': {
-				color: '#aaa'
-			}
+			cursor: disabled ? 'not-allowed' : 'default'
 		}),
 		searchIcon: {
 			display: 'flex',
@@ -132,8 +121,9 @@ const _Input: React.ForwardRefRenderFunction<unknown, IInputProps> = (props, ref
 
 	return (
 		<div ref={ref as any} className={clsx(classes.root, className)}>
-			<input
+			<InputBase
 				{...rest}
+				className={clsx(classes.input, inputClassName)}
 				onFocus={handleInputFocus}
 				onBlur={handleInputBlur}
 				onChange={handleInputChange}
@@ -141,7 +131,6 @@ const _Input: React.ForwardRefRenderFunction<unknown, IInputProps> = (props, ref
 				name={name}
 				value={inputVal}
 				disabled={disabled}
-				className={clsx(classes.input, inputClassName)}
 				placeholder={placeholder}
 			/>
 			{searchBtn}

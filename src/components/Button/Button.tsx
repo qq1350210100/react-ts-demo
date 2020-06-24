@@ -30,7 +30,7 @@ const useStyles = makeStyles(
 			padding: '4px 16px',
 			outline: 0,
 			border: 0,
-			borderRadius: 2,
+			borderRadius: 4,
 			// default背景色太浅导致阴影明显，使得轮廓看起来比较大。单独调整下阴影
 			boxShadow: `0 ${color.name === ThemeNames.DEFAULT ? '0 1px' : '1px 3px'} rgba(26,26,26,.1)`,
 			color: color.text,

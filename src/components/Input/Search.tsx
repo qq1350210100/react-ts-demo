@@ -45,7 +45,7 @@ const useStyles = makeStyles(
 			background: '#fcfcfc',
 			paddingLeft: 8,
 			paddingRight: 32,
-			borderRadius: 2,
+			borderRadius: 4,
 			outline: 0,
 			border: `1px solid ${focus ? color.main : '#e5e5e5'}`,
 			boxShadow: `0 0 0 ${focus ? '2px' : '6px'} ${hex2Rgba(color.main, focus ? 0.7 : 0)}`,
