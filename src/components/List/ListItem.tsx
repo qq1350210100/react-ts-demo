@@ -12,18 +12,20 @@ export interface IListItemProps extends React.LiHTMLAttributes<HTMLElement> {
 	rippleMuted?: boolean
 	onClick?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void | null
 	color?: string
+	textColor?: string
 	to?: string
 	linked?: boolean
 }
 
 interface IStyleProps {
 	color: IColors
+	textColor: IColors
 	bordered: boolean
 }
 
 const useStyles = makeStyles(
 	createStyles({
-		listItem: ({ color, bordered }: IStyleProps) => ({
+		listItem: ({ color, textColor, bordered }: IStyleProps) => ({
 			display: 'flex',
 			alignItems: 'center',
 			position: 'relative',
@@ -32,13 +34,14 @@ const useStyles = makeStyles(
 			padding: '0 24px',
 			margin: 0,
 			borderBottom: bordered ? '1px solid #f0f0f0' : 0,
-			borderRadius: bordered ? 0 : 2,
+			borderRadius: bordered ? 0 : 4,
 			textDecoration: 'none',
 			color: '#303133',
 			transition: 'all .15s ease-out',
 
 			'&:hover': {
-				background: color.main
+				color: textColor.main,
+				background: '#f4f4f5'
 			},
 
 			'&:first-child': {
@@ -64,14 +67,17 @@ const ListItem: React.FC<IListItemProps> = props => {
 		rippleMuted = false,
 		onClick = null,
 		color = ThemeNames.DEFAULT,
+		textColor = ThemeNames.DEFAULT,
 		to = '/',
 		linked = false
 	} = props
 
-	const classes = useStyles({
+	const styleProps: IStyleProps = {
 		color: selectColor(color),
+		textColor: selectColor(textColor),
 		bordered
-	})
+	}
+	const classes = useStyles(styleProps)
 
 	const { rippleRef, handleStart, handleStop } = TouchRipple.useRipple(rippleMuted)
 

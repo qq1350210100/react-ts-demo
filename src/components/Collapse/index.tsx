@@ -17,6 +17,10 @@ const useStyles = makeStyles({
 		minHeight: 0,
 		transition: 'height 250ms ease-out',
 		overflow: 'hidden'
+	},
+	wrapper: {
+		paddingTop: 8,
+		paddingBottom: 8
 	}
 })
 
@@ -49,7 +53,7 @@ const Collapse: React.FC<ICollpaseProps> = props => {
 
 	return (
 		<div {...restProps} ref={containerRef as any} className={containerCls}>
-			<div>{children}</div>
+			<div className={classes.wrapper}>{children}</div>
 		</div>
 	)
 }
