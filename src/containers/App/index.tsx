@@ -6,6 +6,7 @@ import List from 'components/List'
 import Input from 'components/Input'
 import Divider from 'components/Divider'
 import { UserOutlined } from '@ant-design/icons'
+import Loading from 'components/Loading'
 
 interface IAppProps {}
 
@@ -58,7 +59,10 @@ const App: React.FC<IAppProps> = () => {
 			</Input.Group> */}
 
 			{/* <Divider /> */}
-			<Divider>分割线</Divider>
+			{/* <Divider>分割线</Divider> */}
+
+			{/* <Loading.Line />
+			<Loading.Bounce color="error" /> */}
 		</div>
 	)
 }
