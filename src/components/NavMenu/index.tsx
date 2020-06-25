@@ -10,6 +10,7 @@ interface INavMenuProps {
 	color?: string
 	menuOptions?: any[]
 	paddingLeft?: number
+	onSelect?: (id: number) => void
 }
 
 interface IStyleProps {
@@ -68,7 +69,12 @@ const useStyles = makeStyles(
 )
 
 const NavMenu: React.FC<INavMenuProps> = props => {
-	const { menuOptions = [], color = ThemeNames.PRIMARY, paddingLeft = 44 } = props
+	const {
+		menuOptions = [],
+		color = ThemeNames.PRIMARY,
+		paddingLeft = 44,
+		onSelect = () => {}
+	} = props
 
 	const defaultChildOpenStatus = React.useMemo(() => {
 		let defaultObj = {}
@@ -89,12 +95,13 @@ const NavMenu: React.FC<INavMenuProps> = props => {
 
 	const handleToggleChildOpen = React.useCallback(
 		id => {
+			onSelect && onSelect(id)
 			setChildOpenStatus(prev => ({
 				...prev,
 				[id]: !prev[id]
 			}))
 		},
-		[setChildOpenStatus]
+		[setChildOpenStatus, onSelect]
 	)
 
 	const renderArrowIcon = opened => (

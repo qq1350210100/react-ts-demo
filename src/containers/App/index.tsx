@@ -204,7 +204,7 @@ const App: React.FC<IAppProps> = () => {
 				</List>
 			</Collapse> */}
 			<div className={classes.menu}>
-				<NavMenu menuOptions={navMap} color="error" />
+				<NavMenu menuOptions={navMap} color="primary" />
 			</div>
 		</div>
 	)
