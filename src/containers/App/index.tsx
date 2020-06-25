@@ -7,6 +7,7 @@ import Input from 'components/Input'
 import Divider from 'components/Divider'
 import { UserOutlined } from '@ant-design/icons'
 import Loading from 'components/Loading'
+import Tag from 'components/Tag'
 
 interface IAppProps {}
 
@@ -63,6 +64,8 @@ const App: React.FC<IAppProps> = () => {
 
 			{/* <Loading.Line />
 			<Loading.Bounce color="error" /> */}
+
+			<Tag>时代发生地方</Tag>
 		</div>
 	)
 }
