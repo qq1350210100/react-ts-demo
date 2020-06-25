@@ -4,6 +4,7 @@ import TodoList from './components/TodoList'
 import Button from 'components/Button'
 import List from 'components/List'
 import Input from 'components/Input'
+import Divider from 'components/Divider'
 import { UserOutlined } from '@ant-design/icons'
 
 interface IAppProps {}
@@ -50,11 +51,14 @@ const App: React.FC<IAppProps> = () => {
 			{/* <Input.Search placeholder="Search..." onSearch={hanldeSearch} />
 			<Input.TextArea placeholder="Search..." onPressEnter={hanldeSearch} /> */}
 
-			<Input.Group>
+			{/* <Input.Group>
 				<Input.Search />
 				<Input />
 				<Input.TextArea />
-			</Input.Group>
+			</Input.Group> */}
+
+			{/* <Divider /> */}
+			<Divider>分割线</Divider>
 		</div>
 	)
 }
