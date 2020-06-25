@@ -8,6 +8,8 @@ import Divider from 'components/Divider'
 import { UserOutlined } from '@ant-design/icons'
 import Loading from 'components/Loading'
 import Tag from 'components/Tag'
+import Switch from 'components/Switch'
+import { encode } from 'querystring'
 
 interface IAppProps {}
 
@@ -65,7 +67,12 @@ const App: React.FC<IAppProps> = () => {
 			{/* <Loading.Line />
 			<Loading.Bounce color="error" /> */}
 
-			<Tag>时代发生地方</Tag>
+			{/* <Tag>时代发生地方</Tag> */}
+			<Switch
+				onChange={checked => {
+					console.log('11', checked)
+				}}
+			/>
 		</div>
 	)
 }
