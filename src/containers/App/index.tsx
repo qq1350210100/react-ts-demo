@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { createStyles, makeStyles } from '@material-ui/styles'
 import TodoList from './components/TodoList'
 import Button from 'components/Button'
@@ -11,6 +11,7 @@ import Tag from 'components/Tag'
 import Switch from 'components/Switch'
 import Popup from 'components/Popup'
 import Progress from 'components/Progress'
+import Collapse from 'components/Collapse'
 
 interface IAppProps {}
 
@@ -18,8 +19,8 @@ const useStyles = makeStyles(
 	createStyles({
 		app: {
 			display: 'flex',
-			justifyContent: 'center',
-			alignItems: 'center',
+			// justifyContent: 'center',
+			// alignItems: 'center',
 			width: '100vw',
 			height: '100vh'
 		}
@@ -29,13 +30,15 @@ const useStyles = makeStyles(
 const App: React.FC<IAppProps> = () => {
 	const classes = useStyles()
 
-	const {
-		triggerRef,
-		popupRef,
-		visible,
-		handleShowPopup,
-		handleHidePopup
-	} = Popup.usePopupVisible()
+	// const {
+	// 	triggerRef,
+	// 	popupRef,
+	// 	visible,
+	// 	handleShowPopup,
+	// 	handleHidePopup
+	// } = Popup.usePopupVisible()
+
+	const [visible, setVisible] = useState<boolean>(false)
 
 	const handleConsole = () => {
 		console.log('Hello')
@@ -54,6 +57,10 @@ const App: React.FC<IAppProps> = () => {
 	// 		setPercent(percent)
 	// 	}, 1000)
 	// }, [])
+
+	const handleToggleCollapse = () => {
+		setVisible(prev => !prev)
+	}
 
 	return (
 		<div className={classes.app}>
@@ -104,6 +111,16 @@ const App: React.FC<IAppProps> = () => {
 			</Popup> */}
 
 			{/* <Progress percent={precent} color="error" fixedTop /> */}
+
+			{/* <Button onClick={handleToggleCollapse}>切换</Button>
+			<Collapse visible={visible}>
+				<List bordered>
+					<List.Item>sdfdsff</List.Item>
+					<List.Item>sdfdsff</List.Item>
+					<List.Item>sdfdsff</List.Item>
+					<List.Item>sdfdsff</List.Item>
+				</List>
+			</Collapse> */}
 		</div>
 	)
 }
