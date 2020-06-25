@@ -17,8 +17,6 @@ const useStyles = makeStyles(
 			minHeight: 400,
 			boxShadow: '0 4px 24px rgba(26,26,26,.14)',
 			position: 'fixed',
-			top: 56,
-			right: 24,
 			userSelect: 'none'
 		},
 		enter: {

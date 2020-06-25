@@ -10,6 +10,7 @@ import Loading from 'components/Loading'
 import Tag from 'components/Tag'
 import Switch from 'components/Switch'
 import Popup from 'components/Popup'
+import Progress from 'components/Progress'
 
 interface IAppProps {}
 
@@ -45,6 +46,14 @@ const App: React.FC<IAppProps> = () => {
 	const hanldeSearch = value => {
 		console.log('value', value)
 	}
+
+	// const [precent, setPercent] = React.useState(0)
+	// React.useEffect(() => {
+	// 	setInterval(() => {
+	// 		const percent = Math.random() * 100
+	// 		setPercent(percent)
+	// 	}, 1000)
+	// }, [])
 
 	return (
 		<div className={classes.app}>
@@ -84,7 +93,7 @@ const App: React.FC<IAppProps> = () => {
 				}}
 			/> */}
 
-			<Button.Icon onClick={handleShowPopup}>
+			{/* <Button.Icon onClick={handleShowPopup}>
 				<UserOutlined />
 			</Button.Icon>
 			<Popup ref={popupRef} visible={visible}>
@@ -92,7 +101,9 @@ const App: React.FC<IAppProps> = () => {
 				<Button ref={triggerRef} onClick={handleHidePopup}>
 					按钮
 				</Button>
-			</Popup>
+			</Popup> */}
+
+			{/* <Progress percent={precent} color="error" fixedTop /> */}
 		</div>
 	)
 }
