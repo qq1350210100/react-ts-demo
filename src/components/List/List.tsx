@@ -16,6 +16,7 @@ const useStyles = makeStyles(
 		list: {
 			boxSizing: 'border-box',
 			position: 'relative',
+			width: 400,
 			minWidth: 200,
 			minHeight: 40,
 			margin: 0,

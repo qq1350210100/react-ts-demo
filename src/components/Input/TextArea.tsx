@@ -3,10 +3,9 @@ import { createStyles, makeStyles } from '@material-ui/styles'
 import clsx from 'clsx'
 import { hex2Rgba } from 'utils'
 import { ThemeNames, IColors, selectColor } from 'common/themeColors'
-import { InputBase } from './baseComponents'
-import SearchBtn from './SearchBtn'
+import { TextAreaBase } from './baseComponents'
 
-export interface IInputProps extends React.HTMLAttributes<HTMLElement> {
+export interface ITextAreaProps extends React.HTMLAttributes<HTMLElement> {
 	className?: string
 	inputClassName?: string
 	name?: string
@@ -18,7 +17,7 @@ export interface IInputProps extends React.HTMLAttributes<HTMLElement> {
 	disabled?: boolean
 	enterButton?: React.ReactNode | null
 	onChange?: (event: React.FormEvent<HTMLElement>) => void
-	onSearch?: (value: string) => void
+	onPressEnter?: (value: string) => void
 }
 
 interface IStyleProps {
@@ -32,7 +31,7 @@ interface IFocus {
 	(event: React.FocusEvent<HTMLElement>): void
 }
 
-enum InputTypes {
+enum TextAreaTypes {
 	TEXT = 'text',
 	PASSWORD = 'password',
 	SEARCH = 'search'
@@ -44,13 +43,13 @@ const useStyles = makeStyles(
 			// Input.Group compact用到，防止box-shadow被遮挡
 			zIndex: ({ focus }: IStyleProps) => (focus ? 1 : 0),
 			width: 200,
-			height: 30,
+			height: 48,
 			minWidth: 200,
-			minHeight: 28,
+			minHeight: 48,
 			position: 'relative'
 		},
-		input: ({ color, focus, disabled, type }: IStyleProps) => ({
-			paddingRight: type === InputTypes.SEARCH ? 32 : 8,
+		textarea: ({ color, focus, disabled }: IStyleProps) => ({
+			paddingRight: 8,
 			border: `1px solid ${focus ? color.main : '#e5e5e5'}`,
 			boxShadow: `0 0 0 ${focus ? '2px' : '6px'} ${hex2Rgba(color.main, focus ? 0.7 : 0)}`,
 			opacity: disabled ? 0.5 : 1,
@@ -59,7 +58,7 @@ const useStyles = makeStyles(
 	})
 )
 
-const _Input: React.ForwardRefRenderFunction<unknown, IInputProps> = (props, ref) => {
+const _TextArea: React.ForwardRefRenderFunction<unknown, ITextAreaProps> = (props, ref) => {
 	const {
 		className,
 		inputClassName,
@@ -67,12 +66,12 @@ const _Input: React.ForwardRefRenderFunction<unknown, IInputProps> = (props, ref
 		value = '',
 		values = {},
 		placeholder,
-		type = InputTypes.TEXT,
+		type = TextAreaTypes.TEXT,
 		color = ThemeNames.PRIMARY,
 		disabled = false,
 		enterButton = null,
 		onChange = () => {},
-		onSearch = () => {},
+		onPressEnter = () => {},
 		...restProps
 	} = props
 	const { onFocus, onBlur } = restProps
@@ -108,36 +107,27 @@ const _Input: React.ForwardRefRenderFunction<unknown, IInputProps> = (props, ref
 		[onChange, values]
 	)
 
-	const handleSearch = React.useCallback(() => {
-		onSearch && onSearch(inputVal)
-	}, [inputVal, onSearch])
-
 	const handleKeyDown = React.useCallback(
-		(e: React.KeyboardEvent<HTMLInputElement>) => {
+		(e: React.KeyboardEvent<HTMLTextAreaElement>) => {
 			if (e.keyCode === 13) {
-				onSearch && onSearch(inputVal)
+				onPressEnter && onPressEnter(inputVal)
 			}
 		},
-		[inputVal, onSearch]
+		[inputVal, onPressEnter]
 	)
 
 	React.useEffect(() => {
 		setInputVal(value)
 	}, [value])
 
-	const suffix = type === InputTypes.SEARCH && (
-		<SearchBtn onSearch={handleSearch} enterButton={enterButton} />
-	)
-
 	const containerCls = clsx(classes.root, className)
-	const inputCls = clsx(classes.input, inputClassName)
+	const textareaCls = clsx(classes.textarea, inputClassName)
 
 	return (
 		<div ref={ref as any} className={containerCls}>
-			<InputBase
+			<TextAreaBase
 				{...restProps}
-				className={inputCls}
-				type={type === InputTypes.PASSWORD ? type : InputTypes.TEXT}
+				className={textareaCls}
 				onFocus={handleInputFocus}
 				onBlur={handleInputBlur}
 				onKeyDown={handleKeyDown}
@@ -147,11 +137,10 @@ const _Input: React.ForwardRefRenderFunction<unknown, IInputProps> = (props, ref
 				disabled={disabled}
 				placeholder={placeholder}
 			/>
-			{suffix}
 		</div>
 	)
 }
 
-const Input = React.forwardRef<unknown, IInputProps>(_Input)
+const TextArea = React.forwardRef<unknown, ITextAreaProps>(_TextArea)
 
-export default React.memo(Input)
+export default React.memo(TextArea)

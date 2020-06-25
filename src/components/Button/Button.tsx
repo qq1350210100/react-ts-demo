@@ -46,7 +46,7 @@ const useStyles = makeStyles(
 )
 
 const Button: React.FC<IButtonProps> = props => {
-	const { children, className, color = ThemeNames.DEFAULT, disabled = false, ...rest } = props
+	const { children, className, color = ThemeNames.DEFAULT, disabled = false, ...restProps } = props
 	const stylesProps: IStyleProps = { color: selectColor(color), disabled }
 	const classes = useStyles(stylesProps)
 	const { rippleRef, handleStart, handleStop } = TouchRipple.useRipple()
@@ -55,7 +55,7 @@ const Button: React.FC<IButtonProps> = props => {
 	return (
 		<button
 			type="button"
-			{...rest}
+			{...restProps}
 			className={btnCls}
 			onMouseDown={handleStart}
 			onMouseUp={handleStop}

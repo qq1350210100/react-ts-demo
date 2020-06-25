@@ -51,7 +51,7 @@ const _IconButton: React.ForwardRefRenderFunction<unknown, IIconButtonProps> = (
 		color = ThemeNames.DEFAULT,
 		disabled = false,
 		focus = false,
-		...rest
+		...restProps
 	} = props
 	const stylesProps: IStyleProps = { color: selectColor(color), focus, disabled }
 	const classes = useStyles(stylesProps)
@@ -60,7 +60,7 @@ const _IconButton: React.ForwardRefRenderFunction<unknown, IIconButtonProps> = (
 
 	return (
 		<div
-			{...rest}
+			{...restProps}
 			ref={ref as any}
 			className={btnCls}
 			onMouseDown={handleStart}

@@ -16,7 +16,7 @@ const useStyles = makeStyles(
 			alignItems: 'center',
 			width: '100vw',
 			height: '100vh'
-		},
+		}
 	})
 )
 
@@ -28,21 +28,33 @@ const App: React.FC<IAppProps> = () => {
 	const handleEnter = () => {
 		console.log('World')
 	}
+	const hanldeSearch = value => {
+		console.log('value', value)
+	}
 	return (
 		<div className={classes.app}>
 			{/* <TodoList /> */}
-			<Button color="primary" onClick={handleConsole} onMouseEnter={handleEnter}>
+			{/* <Button color="primary" onClick={handleConsole} onMouseEnter={handleEnter}>
 				测试按钮
 			</Button>
-			<Button.Icon><UserOutlined /></Button.Icon>
+			<Button.Icon>
+				<UserOutlined />
+			</Button.Icon>
 			<List bordered>
 				<List.Item>sdfdsff</List.Item>
 				<List.Item>sdfdsff</List.Item>
 				<List.Item>sdfdsff</List.Item>
 				<List.Item>sdfdsff</List.Item>
 			</List>
+			<Input placeholder="Basic" /> */}
+			{/* <Input.Search placeholder="Search..." onSearch={hanldeSearch} />
+			<Input.TextArea placeholder="Search..." onPressEnter={hanldeSearch} /> */}
 
-			<Input placeholder="Basic" type="search" />
+			<Input.Group>
+				<Input.Search />
+				<Input />
+				<Input.TextArea />
+			</Input.Group>
 		</div>
 	)
 }
