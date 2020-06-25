@@ -3,8 +3,8 @@
  * @param {string} hex 16进制色值
  * @param {number} opacity 透明度
  */
-export function hex2Rgba(hex, opacity) {
-	const convert = (a, b) => parseInt(`0x${hex.slice(a, b)}`)
+export function hex2Rgba(hex: string, opacity: number) {
+	const convert = (a: number, b: number) => parseInt(`0x${hex.slice(a, b)}`)
 	return `rgba(
 		${convert(1, 3)},
 		${convert(3, 5)},

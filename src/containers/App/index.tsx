@@ -9,7 +9,7 @@ import { UserOutlined } from '@ant-design/icons'
 import Loading from 'components/Loading'
 import Tag from 'components/Tag'
 import Switch from 'components/Switch'
-import { encode } from 'querystring'
+import Popup from 'components/Popup'
 
 interface IAppProps {}
 
@@ -27,6 +27,15 @@ const useStyles = makeStyles(
 
 const App: React.FC<IAppProps> = () => {
 	const classes = useStyles()
+
+	const {
+		triggerRef,
+		popupRef,
+		visible,
+		handleShowPopup,
+		handleHidePopup
+	} = Popup.usePopupVisible()
+
 	const handleConsole = () => {
 		console.log('Hello')
 	}
@@ -36,6 +45,7 @@ const App: React.FC<IAppProps> = () => {
 	const hanldeSearch = value => {
 		console.log('value', value)
 	}
+
 	return (
 		<div className={classes.app}>
 			{/* <TodoList /> */}
@@ -68,11 +78,21 @@ const App: React.FC<IAppProps> = () => {
 			<Loading.Bounce color="error" /> */}
 
 			{/* <Tag>时代发生地方</Tag> */}
-			<Switch
+			{/* <Switch
 				onChange={checked => {
 					console.log('11', checked)
 				}}
-			/>
+			/> */}
+
+			<Button.Icon onClick={handleShowPopup}>
+				<UserOutlined />
+			</Button.Icon>
+			<Popup ref={popupRef} visible={visible}>
+				test
+				<Button ref={triggerRef} onClick={handleHidePopup}>
+					按钮
+				</Button>
+			</Popup>
 		</div>
 	)
 }

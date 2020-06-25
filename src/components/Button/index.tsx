@@ -3,7 +3,9 @@ import _Button, { IButtonProps } from './Button'
 import _IconButton from './IconButton'
 
 interface IButtonExports
-	extends React.MemoExoticComponent<React.FC<IButtonProps & React.RefAttributes<HTMLElement>>> {
+	extends React.MemoExoticComponent<
+		React.ForwardRefExoticComponent<IButtonProps & React.RefAttributes<HTMLElement>>
+	> {
 	Icon: typeof _IconButton
 }
 

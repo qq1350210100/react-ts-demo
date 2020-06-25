@@ -30,7 +30,7 @@ const useStyles = makeStyles(
 			background: color.ripple,
 			padding: '0 4px',
 			border: bordered ? `1px solid ${color.bright}` : 0,
-			borderRadius: 2,
+			borderRadius: 4,
 			cursor: 'default',
 
 			'&>i': {

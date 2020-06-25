@@ -45,7 +45,7 @@ const useStyles = makeStyles(
 	})
 )
 
-const Button: React.FC<IButtonProps> = props => {
+const _Button: React.ForwardRefRenderFunction<unknown, IButtonProps> = (props, ref) => {
 	const { children, className, color = ThemeNames.DEFAULT, disabled = false, ...restProps } = props
 	const stylesProps: IStyleProps = { color: selectColor(color), disabled }
 	const classes = useStyles(stylesProps)
@@ -56,6 +56,7 @@ const Button: React.FC<IButtonProps> = props => {
 		<button
 			type="button"
 			{...restProps}
+			ref={ref as any}
 			className={btnCls}
 			onMouseDown={handleStart}
 			onMouseUp={handleStop}
@@ -66,5 +67,7 @@ const Button: React.FC<IButtonProps> = props => {
 		</button>
 	)
 }
+
+const Button = React.forwardRef<unknown, IButtonProps>(_Button)
 
 export default React.memo(Button)
