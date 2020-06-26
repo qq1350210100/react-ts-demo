@@ -1,14 +1,14 @@
 import React from 'react'
 import { makeStyles, createStyles } from '@material-ui/styles'
 import clsx from 'clsx'
-import { DownOutlined } from '@ant-design/icons'
+import { CaretDownFilled } from '@ant-design/icons'
 import { ThemeNames, IColors, selectColor } from 'common/themeColors'
 import Collapse from '../Collapse'
 import List from '../List'
 
 interface INavMenuProps {
 	color?: string
-	menuOptions?: any[]
+	menuOptions?: IMenuOptions[]
 	paddingLeft?: number
 	onSelect?: (id: number) => void
 }
@@ -16,6 +16,27 @@ interface INavMenuProps {
 interface IStyleProps {
 	color: IColors
 	paddingLeft: number
+}
+
+export interface IMenuOptions {
+	id?: number
+	name?: string
+	path?: string
+	icon?: React.ReactElement | null
+	component?: React.ReactElement | null
+	childs?: IMenuOptions[]
+}
+
+interface IOpenStatus {
+	[key: string]: boolean
+}
+
+interface ISuperItem extends IMenuOptions {
+	opened: boolean
+}
+
+interface ISubItem extends ISuperItem {
+	superId: number
 }
 
 const useStyles = makeStyles(
@@ -27,27 +48,26 @@ const useStyles = makeStyles(
 			userSelect: 'none'
 		},
 		superItem: {
-			fontWeight: 500
-		},
-		childWrapper: {
-			minHeight: 0,
-			transition: 'height 250ms ease-out'
+			fontWeight: 'bolder'
 		},
 		subItem: ({ paddingLeft }: IStyleProps) => ({
 			textDecoration: 'none',
 			color: '#303133',
-			paddingLeft,
-			'&>svg': {
-				marginRight: 24,
-				fontSize: 16
-			}
+			paddingLeft
 		}),
+		subsWrapper: {
+			minHeight: 0,
+			transition: 'height 250ms ease-out'
+		},
+		icon: {
+			marginRight: 8
+		},
 		arrowIcon: {
 			display: 'flex',
 			alignItems: 'center',
 			justifyContent: 'flex-end',
 			height: '100%',
-			fontSize: 12,
+			fontSize: 11,
 			position: 'absolute',
 			top: 0,
 			right: 16,
@@ -56,14 +76,16 @@ const useStyles = makeStyles(
 		arrowIconSelected: {
 			transform: 'rotate(180deg)'
 		},
-		superItemActived: ({ color }: IStyleProps) => ({
+		actived: ({ color }: IStyleProps) => ({
+			fontWeight: 'bolder',
 			textDecoration: 'none',
-			color: color.main,
-			fontWeight: 500
-		}),
-		subItemActived: ({ color }: IStyleProps) => ({
-			textDecoration: 'none',
-			color: color.main
+			color: color.text,
+			background: color.bright,
+
+			'&:hover': {
+				color: color.text,
+				background: color.bright
+			}
 		})
 	})
 )
@@ -72,20 +94,22 @@ const NavMenu: React.FC<INavMenuProps> = props => {
 	const {
 		menuOptions = [],
 		color = ThemeNames.PRIMARY,
-		paddingLeft = 44,
+		paddingLeft = 48,
 		onSelect = () => {}
 	} = props
 
 	const defaultChildOpenStatus = React.useMemo(() => {
-		let defaultObj = {}
+		const defaultObj = {}
 		menuOptions.forEach(({ id }) => {
-			defaultObj[id] = false
+			if (id) {
+				defaultObj[id] = false
+			}
 		})
 		return defaultObj
 	}, [menuOptions])
 
 	// 内部维护一个菜单展开状态
-	const [childOpenStatus, setChildOpenStatus] = React.useState(defaultChildOpenStatus)
+	const [childOpenStatus, setChildOpenStatus] = React.useState<IOpenStatus>(defaultChildOpenStatus)
 
 	const styleProps: IStyleProps = {
 		color: selectColor(color),
@@ -93,74 +117,95 @@ const NavMenu: React.FC<INavMenuProps> = props => {
 	}
 	const classes = useStyles(styleProps)
 
-	const handleToggleChildOpen = React.useCallback(
-		id => {
-			onSelect && onSelect(id)
-			setChildOpenStatus(prev => ({
-				...prev,
-				[id]: !prev[id]
-			}))
+	const handleSelect = React.useCallback(
+		(id?: number) => {
+			id && onSelect && onSelect(id)
 		},
-		[setChildOpenStatus, onSelect]
+		[onSelect]
 	)
 
-	const renderArrowIcon = opened => (
-		<DownOutlined className={clsx(classes.arrowIcon, opened && classes.arrowIconSelected)} />
+	const handleToggleChildOpen = React.useCallback(
+		(id?: number) => {
+			if (id) {
+				handleSelect(id)
+				setChildOpenStatus(prev => ({
+					...prev,
+					[id]: !prev[id]
+				}))
+			}
+		},
+		[handleSelect]
+	)
+
+	const renderArrowIcon = React.useCallback(
+		opened => (
+			<CaretDownFilled className={clsx(classes.arrowIcon, opened && classes.arrowIconSelected)} />
+		),
+		[classes]
 	)
 
 	const renderSuperMenu = React.useCallback(
-		({ id, name, path, child, icon, opened }) => (
-			<List.Item
-				className={classes.superItem}
-				activeClassName={classes.superItemActived}
-				bordered={false}
-				textColor={color}
-				linked={!child}
-				to={path}
-				onClick={child ? () => handleToggleChildOpen(id) : () => {}}
-			>
-				{icon}
-				<span>{name}</span>
-				{child && renderArrowIcon(opened)}
-			</List.Item>
-		),
-		[handleToggleChildOpen]
+		(superItem: ISuperItem) => {
+			const { id, name, path, childs, icon, opened } = superItem
+			return (
+				<List.Item
+					className={classes.superItem}
+					activeClassName={classes.actived}
+					bordered={false}
+					textColor={color}
+					linked={!childs}
+					to={path}
+					onClick={childs ? () => handleToggleChildOpen(id) : () => handleSelect(id)}
+				>
+					{icon && <span className={classes.icon}>{icon}</span>}
+					<span>{name}</span>
+					{childs && renderArrowIcon(opened)}
+				</List.Item>
+			)
+		},
+		[handleToggleChildOpen, handleSelect]
 	)
 
-	const renderSubMenu = React.useCallback(
-		({ path, child, opened }) => (
-			<Collapse className={classes.childWrapper} visible={opened}>
-				{child.map(({ id, name, path: childPath, icon }) => (
-					<List.Item
-						key={id}
-						className={classes.subItem}
-						activeClassName={classes.subItemActived}
-						linked
-						to={path + childPath}
-						textColor={color}
-						bordered={false}
-					>
-						{icon}
-						<span>{name}</span>
-					</List.Item>
-				))}
+	const renderSubMenu = React.useCallback((subItem: ISubItem) => {
+		const { path = '', childs = [], opened, superId } = subItem
+		return (
+			<Collapse className={classes.subsWrapper} visible={opened}>
+				{childs.map((child: IMenuOptions) => {
+					const { id, name, icon, path: childPath = '' } = child
+					const fianllyPath = path + childPath
+					const finallyId = Number(`${superId}${id}`)
+					return (
+						<List.Item
+							key={id}
+							className={classes.subItem}
+							activeClassName={classes.actived}
+							textColor={color}
+							bordered={false}
+							linked
+							to={fianllyPath}
+							onClick={() => handleSelect(finallyId)}
+						>
+							{icon && <span className={classes.icon}>{icon}</span>}
+							<span>{name}</span>
+						</List.Item>
+					)
+				})}
 			</Collapse>
-		),
-		[]
-	)
+		)
+	}, [])
 
 	return (
 		<List className={classes.root}>
-			{menuOptions.map(item => {
-				const { id, path, child } = item
+			{menuOptions.map((item: IMenuOptions) => {
+				const { id = 0, childs } = item
 				const opened = childOpenStatus[id]
-				const superItem = { ...item, opened }
-				const subItem = { path, child, opened }
+				const superItem: ISuperItem = { ...item, opened }
+				const subItem: ISubItem = { ...item, opened, superId: id }
 
 				return (
 					<React.Fragment key={id}>
 						{renderSuperMenu(superItem)}
-						{child && renderSubMenu(subItem)}
+						{childs && renderSubMenu(subItem)}
 					</React.Fragment>
 				)
 			})}

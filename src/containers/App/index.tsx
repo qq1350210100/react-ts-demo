@@ -1,18 +1,31 @@
 import React, { useState } from 'react'
 import { createStyles, makeStyles } from '@material-ui/styles'
 import TodoList from './components/TodoList'
-import Button from 'components/Button'
-import List from 'components/List'
-import Input from 'components/Input'
-import Divider from 'components/Divider'
-import { UserOutlined } from '@ant-design/icons'
-import Loading from 'components/Loading'
-import Tag from 'components/Tag'
-import Switch from 'components/Switch'
-import Popup from 'components/Popup'
-import Progress from 'components/Progress'
-import Collapse from 'components/Collapse'
-import NavMenu from 'components/NavMenu'
+import {
+	UserOutlined,
+	HomeOutlined,
+	ReadOutlined,
+	SettingOutlined,
+	CompassOutlined,
+	Html5Outlined,
+	MobileOutlined,
+	CloudServerOutlined,
+	CodeOutlined,
+	ToolOutlined
+} from '@ant-design/icons'
+import {
+	Button,
+	List,
+	Input,
+	Divider,
+	Loading,
+	NavMenu,
+	Collapse,
+	Progress,
+	Popup,
+	Switch,
+	Tag
+} from 'components'
 
 interface IAppProps {}
 
@@ -26,7 +39,9 @@ const useStyles = makeStyles(
 			height: '100vh'
 		},
 		menu: {
-			width: 240
+			width: 240,
+			padding: 8,
+			borderRight: '1px solid #f1f1f1'
 		}
 	})
 )
@@ -35,58 +50,57 @@ const navMap = [
 	{
 		id: 0,
 		name: '主页',
-		path: '/',
-		icon: null,
+		path: '/'
+		// icon: <HomeOutlined />
 		// component: <HomePage />,
-		child: null
 	},
 	{
 		id: 1,
 		name: '文章分类',
 		path: '/article',
-		icon: null,
+		// icon: <ReadOutlined />,
 		// component: null,
-		child: [
+		childs: [
 			{
 				id: 0,
 				name: '全部',
 				path: '/all',
-				icon: null
+				icon: <ReadOutlined />
 				// component: <ArticleListPage />
 			},
 			{
 				id: 1,
 				name: '前端',
 				path: '/frontend',
-				icon: null
+				icon: <Html5Outlined />
 				// component: <ArticleListPage sort="frontend" />
 			},
 			{
 				id: 2,
 				name: '移动端',
 				path: '/mobile',
-				icon: null
+				icon: <MobileOutlined />
 				// component: <ArticleListPage sort="mobile" />
 			},
 			{
 				id: 3,
 				name: '后端',
 				path: '/backend',
-				icon: null
+				icon: <CloudServerOutlined />
 				// component: <ArticleListPage sort="backend" />
 			},
 			{
 				id: 4,
 				name: '计算机通用',
 				path: '/computer_science',
-				icon: null
+				icon: <CodeOutlined />
 				// component: <ArticleListPage sort="computer_science" />
 			},
 			{
 				id: 5,
 				name: '工程化',
 				path: '/engineering',
-				icon: null
+				icon: <ToolOutlined />
 				// component: <ArticleListPage sort="engineering" />
 			}
 		]
@@ -94,18 +108,16 @@ const navMap = [
 	{
 		id: 2,
 		name: '文档聚合',
-		path: '/document',
-		icon: null,
+		path: '/document'
+		// icon: <CompassOutlined />
 		// component: <ArticlePage />,
-		child: null
 	},
 	{
 		id: 3,
 		name: '设置',
-		path: '/setting',
-		icon: null,
+		path: '/setting'
+		// icon: <SettingOutlined />
 		// component: <SettingPage />,
-		child: null
 	}
 ]
 
@@ -202,10 +214,10 @@ const App: React.FC<IAppProps> = () => {
 					<List.Item>sdfdsff</List.Item>
 					<List.Item>sdfdsff</List.Item>
 				</List>
-			</Collapse> */}
+			</Collapse>
 			<div className={classes.menu}>
-				<NavMenu menuOptions={navMap} color="primary" />
-			</div>
+				<NavMenu menuOptions={navMap} color="primary" onSelect={hanldeSearch} />
+			</div> */}
 		</div>
 	)
 }

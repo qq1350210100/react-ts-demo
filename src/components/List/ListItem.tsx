@@ -19,7 +19,7 @@ export interface IListItemProps extends React.LiHTMLAttributes<HTMLElement> {
 
 interface IStyleProps {
 	color: IColors
-	textColor: IColors
+	textColor: IColors | null
 	bordered: boolean
 }
 
@@ -40,19 +40,18 @@ const useStyles = makeStyles(
 			transition: 'all .15s ease-out',
 
 			'&:hover': {
-				color: textColor.main,
-				background: '#f4f4f5'
+				color: textColor ? textColor.main : color.text
 			},
 
 			'&:first-child': {
-				borderTopLeftRadius: 2,
-				borderTopRightRadius: 2
+				borderTopLeftRadius: 4,
+				borderTopRightRadius: 4
 			},
 
 			'&:last-child': {
 				borderBottom: 0,
-				borderBottomLeftRadius: 2,
-				borderBottomRightRadius: 2
+				borderBottomLeftRadius: 4,
+				borderBottomRightRadius: 4
 			}
 		})
 	})
@@ -67,14 +66,14 @@ const ListItem: React.FC<IListItemProps> = props => {
 		rippleMuted = false,
 		onClick = null,
 		color = ThemeNames.DEFAULT,
-		textColor = ThemeNames.DEFAULT,
+		textColor = null,
 		to = '/',
 		linked = false
 	} = props
 
 	const styleProps: IStyleProps = {
 		color: selectColor(color),
-		textColor: selectColor(textColor),
+		textColor: textColor ? selectColor(textColor) : null,
 		bordered
 	}
 	const classes = useStyles(styleProps)
@@ -90,7 +89,7 @@ const ListItem: React.FC<IListItemProps> = props => {
 			onMouseUp: handleStop,
 			onMouseLeave: handleStop
 		}),
-		[className, onClick, handleStart, handleStop]
+		[classes.listItem, className, onClick, handleStart, handleStop]
 	)
 
 	const renderNavItem = () => (
