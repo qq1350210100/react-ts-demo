@@ -13,6 +13,13 @@ after_script:
   - git add .
   - git commit -m "Travis CI Auto Builder at `date +"%Y-%m-%d %H:%M"`" # 提交记录包含时间
   - git push --force --quiet "https://${Travis_Token}@${GH_REF}" dev:dev #Travis_Token是在Travis中配置环境变量的名称
+cache:
+  directories:
+    - node_modules
+install:
+  - yarn
+  scripts:
+  - yarn build
 branches:
   only:
     - dev #只监测dev分支，dev是我的分支的名称，可根据自己情况设置
