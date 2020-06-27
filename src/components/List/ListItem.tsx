@@ -40,7 +40,13 @@ const useStyles = makeStyles(
 			transition: 'all .15s ease-out',
 
 			'&:hover': {
-				color: textColor ? textColor.main : color.text
+				color: '#303133',
+				background: 'rgba(160, 160, 160, .1)'
+				// color: textColor
+				// 	? textColor.name === ThemeNames.DEFAULT
+				// 		? '#000'
+				// 		: textColor.main
+				// 	: color.text
 			},
 
 			'&:first-child': {

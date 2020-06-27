@@ -1,5 +1,5 @@
 import React from 'react'
-import { makeStyles } from '@material-ui/styles'
+import { makeStyles, createStyles } from '@material-ui/styles'
 import clsx from 'clsx'
 
 interface ICollpaseProps extends React.HTMLAttributes<HTMLElement> {
@@ -11,18 +11,20 @@ interface IStyleProps {
 	containerHeight: string | number
 }
 
-const useStyles = makeStyles({
-	root: {
-		height: ({ containerHeight }: IStyleProps) => containerHeight,
-		minHeight: 0,
-		transition: 'height 250ms ease-out',
-		overflow: 'hidden'
-	},
-	wrapper: {
-		paddingTop: 8,
-		paddingBottom: 8
-	}
-})
+const useStyles = makeStyles(
+	createStyles({
+		root: {
+			height: ({ containerHeight }: IStyleProps) => containerHeight,
+			minHeight: 0,
+			transition: 'height 250ms ease-out',
+			overflow: 'hidden'
+		},
+		wrapper: {
+			paddingTop: 8,
+			paddingBottom: 8
+		}
+	})
+)
 
 const Collapse: React.FC<ICollpaseProps> = props => {
 	const { children, className, visible = false, ...restProps } = props

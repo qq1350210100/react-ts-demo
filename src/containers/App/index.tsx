@@ -24,7 +24,8 @@ import {
 	Progress,
 	Popup,
 	Switch,
-	Tag
+	Tag,
+	Select
 } from 'components'
 
 interface IAppProps {}
@@ -40,7 +41,7 @@ const useStyles = makeStyles(
 		},
 		menu: {
 			width: 240,
-			padding: 8,
+			// padding: 8,
 			borderRight: '1px solid #f1f1f1'
 		}
 	})
@@ -214,10 +215,17 @@ const App: React.FC<IAppProps> = () => {
 					<List.Item>sdfdsff</List.Item>
 					<List.Item>sdfdsff</List.Item>
 				</List>
-			</Collapse>
+			</Collapse> */}
 			<div className={classes.menu}>
 				<NavMenu menuOptions={navMap} color="primary" onSelect={hanldeSearch} />
-			</div> */}
+			</div>
+
+			{/* <Select>
+				<Select.Option value="primary">湛蓝</Select.Option>
+				<Select.Option value="success">碧绿</Select.Option>
+				<Select.Option value="error">粉红</Select.Option>
+				<Select.Option value="warning">橙黄</Select.Option>
+			</Select> */}
 		</div>
 	)
 }

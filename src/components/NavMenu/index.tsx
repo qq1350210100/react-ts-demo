@@ -60,6 +60,7 @@ const useStyles = makeStyles(
 			transition: 'height 250ms ease-out'
 		},
 		icon: {
+			fontSize: 15,
 			marginRight: 8
 		},
 		arrowIcon: {
@@ -77,14 +78,15 @@ const useStyles = makeStyles(
 			transform: 'rotate(180deg)'
 		},
 		actived: ({ color }: IStyleProps) => ({
-			fontWeight: 'bolder',
 			textDecoration: 'none',
-			color: color.text,
-			background: color.bright,
+			color: color.dim,
+			// background: 'rgba(160, 160, 160, .1)',
+			background: color.ripple,
 
 			'&:hover': {
-				color: color.text,
-				background: color.bright
+				color: color.dim,
+				background: color.ripple
+				// background: 'rgba(160, 160, 160, .1)'
 			}
 		})
 	})
@@ -94,7 +96,7 @@ const NavMenu: React.FC<INavMenuProps> = props => {
 	const {
 		menuOptions = [],
 		color = ThemeNames.PRIMARY,
-		paddingLeft = 48,
+		paddingLeft = 40,
 		onSelect = () => {}
 	} = props
 
