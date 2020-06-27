@@ -19,7 +19,7 @@ cache:
 install:
   - yarn
 scripts:
-  - yarn build
+  - CI=false yarn build
 branches:
   only:
     - dev #只监测dev分支，dev是我的分支的名称，可根据自己情况设置
