@@ -1,0 +1,27 @@
+language: node_js
+node_js:
+  - 13
+after_script:
+  - git clone https://${GH_REF} .deploy_git # GH_REF是最下面配置的仓库地址
+  - cd .deploy_git
+  - git checkout dev
+  - cd ../
+  - mv .deploy_git/.git/ ./public/ # 这一步之前的操作是为了保留master分支的提交记录，不然每次git init的话只有1条commit
+  - cd ./public
+  - git config user.name "qq1350210100" #修改name
+  - git config user.email "1350210100@qq.com" #修改email
+  - git add .
+  - git commit -m "Travis CI Auto Builder at `date +"%Y-%m-%d %H:%M"`" # 提交记录包含时间
+  - git push --force --quiet "https://${Travis_Token}@${GH_REF}" dev:dev #Travis_Token是在Travis中配置环境变量的名称
+branches:
+  only:
+    - dev #只监测dev分支，dev是我的分支的名称，可根据自己情况设置
+env:
+  global:
+    - GH_REF: github.com/github.com/qq1350210100/react-ts-demo.git
+    - Travis_Token:react-ts-demo
+notifications:
+  email:
+    - 1350210100@qq.com
+  on_success: change
+  on_failure: always
