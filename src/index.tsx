@@ -6,6 +6,9 @@ import App from 'containers/App'
 import * as serviceWorker from './serviceWorker'
 import { BrowserRouter as Router } from 'react-router-dom'
 console.log('111')
+console.log('111')
+console.log('111')
+console.log('111')
 
 ReactDOM.render(
 	<React.StrictMode>
