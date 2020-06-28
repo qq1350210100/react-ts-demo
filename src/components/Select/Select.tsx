@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { makeStyles, createStyles } from '@material-ui/styles'
 import clsx from 'clsx'
 import { CaretDownFilled } from '@ant-design/icons'
@@ -6,17 +6,22 @@ import { ThemeNames, IColors, selectColor } from 'common/themeColors'
 import Option from './Option'
 import GroundGlass from '../GroundGlass'
 
-export interface ISelectProps extends React.HTMLAttributes<HTMLElement> {
+export interface ISelectOption {
+	value: string
+	desc: string
+}
+
+export interface ISelectProps {
+	children: any
 	className?: string
 	color?: string
-	timeout?: number
-	_onChange?: (value?: string) => void
+	defaultValue?: string
+	onChange?: (value: string) => void
 }
 
 interface IStyleProps {
 	color: IColors
-	timeout: number
-	listVisible: boolean
+	dropVisible: boolean
 }
 
 const useStyles = makeStyles(
@@ -35,46 +40,46 @@ const useStyles = makeStyles(
 			justifyContent: 'space-between',
 			width: '100%',
 			height: 32,
-			background: '#fafafa',
+			background: '#fcfcfc',
 			paddingLeft: 8,
 			paddingRight: 8,
-			borderRadius: 2,
-			border: '1px solid #e2e2e2',
-			'&>i': {
-				display: 'flex',
-				alignItems: 'center',
-				justifyContent: 'center',
-				fontSize: 12,
-				color: '#303133'
-			}
+			borderRadius: 4,
+			border: '1px solid #e2e2e2'
 		},
-		optionWrapper: ({ listVisible, timeout }: IStyleProps) => ({
+		dropDownIcon: {
+			fontSize: 11,
+			paddingLeft: 16
+		},
+		optionWrapper: ({ dropVisible }: IStyleProps) => ({
 			width: '100%',
 			position: 'absolute',
 			top: 0,
 			left: 0,
-			borderRadius: 2,
+			padding: '4px 8px',
+			borderRadius: 4,
 			boxShadow: '0 4px 24px rgba(26,26,26,.14)',
 			overflow: 'hidden',
-			zIndex: listVisible ? 999 : -1,
-			opacity: listVisible ? 1 : 0,
-			transition: `all ${timeout}ms ease-out`,
-			transformOrigin: '50% 16px'
+			zIndex: dropVisible ? 999 : -1,
+			opacity: dropVisible ? 1 : 0,
+			transformOrigin: '0 0'
 		}),
-		firstOption: ({ color }: IStyleProps) => ({
-			color: color.main
+		currentSelected: ({ color }: IStyleProps) => ({
+			color: color.main,
+			background: color.ripple,
+
+			'&:hover': {
+				background: color.ripple
+			}
 		}),
 		enter: {
 			animation: '$kf_enter ease-out',
-			animationDuration: ({ timeout }: IStyleProps) => `${timeout}ms`
+			animationDuration: '200ms'
 		},
 		'@keyframes kf_enter': {
 			'0%': {
-				opacity: 0,
 				transform: 'scale(.6)'
 			},
 			'100%': {
-				opacity: 1,
 				transform: 'scale(1)'
 			}
 		}
@@ -85,98 +90,86 @@ const Select: React.FC<ISelectProps> = props => {
 	const {
 		children,
 		className,
+		defaultValue = '',
 		color = ThemeNames.PRIMARY,
-		timeout = 200,
-		_onChange = () => {},
-		...restProps
+		onChange = () => {}
 	} = props
 
-	const [listVisible, setListVisible] = useState<boolean>(false)
-	const [values, setValues] = React.useState<any[]>([])
-	const [childrens, setChildrens] = React.useState<any[]>([])
-	const [selectedIndex, setSelectedIndex] = React.useState<number>(0)
+	const defaultOption = { desc: '', value: '' }
+	const [selected, setSelected] = React.useState<ISelectOption>(defaultOption)
+	const [dropVisible, setDropVisible] = React.useState<boolean>(false)
 
-	const handleShowList = () => {
-		setListVisible(true)
+	const handleShowDrop = () => {
+		setDropVisible(true)
 	}
-	const handleHideList = () => {
-		setListVisible(false)
+
+	const handleHideDrop = () => {
+		setDropVisible(false)
 	}
+
+	const handleChange = React.useCallback(
+		(option: ISelectOption) => {
+			setSelected(option)
+			onChange && onChange(option.value)
+			handleHideDrop()
+		},
+		[onChange, handleHideDrop]
+	)
 
 	const styleProps: IStyleProps = {
-		listVisible,
-		timeout,
+		dropVisible,
 		color: selectColor(color)
 	}
 	const classes = useStyles(styleProps)
 
-	const refs: any = React.useMemo(() => React.Children.map(children, () => React.createRef()), [
-		children
-	])
-
-	console.log('refs', refs)
-
-	const selected = React.useMemo(
-		() => ({
-			value: values[selectedIndex],
-			children: childrens[selectedIndex]
-		}),
-		[values, childrens, selectedIndex]
-	)
-
-	// console.log('selected', selected)
-	// console.log('selectedIndex', selectedIndex)
-
 	React.useEffect(() => {
-		const values = refs.map(ref => ref.current.value)
-		console.log('values: ', values)
-		const childrens = refs.map(ref => ref.current.children)
-		console.log('childrens: ', childrens)
-		setValues(values)
-		setChildrens(childrens)
-	}, [refs])
-
-	React.useEffect(() => {
-		listVisible && document.addEventListener('click', handleHideList)
-		return () => {
-			document.removeEventListener('click', handleHideList)
+		if (defaultValue && children) {
+			React.Children.forEach(children, (child: JSX.Element) => {
+				if (child?.props?.value === defaultValue) {
+					setSelected({
+						value: child.props.value,
+						desc: child.props.children
+					})
+				}
+			})
 		}
-	}, [listVisible, handleHideList])
+	}, [defaultValue, children])
 
-	const handleChange = value => {
-		console.log('value: ', value)
-		setSelectedIndex(values.indexOf(value))
-		_onChange && _onChange(value)
-	}
+	React.useEffect(() => {
+		if (dropVisible) {
+			document.addEventListener('click', handleHideDrop)
+		}
+		return () => {
+			document.removeEventListener('click', handleHideDrop)
+		}
+	}, [dropVisible, handleHideDrop])
+
+	const containerCls = clsx(classes.root, className)
+	const dropListCls = clsx(classes.optionWrapper, dropVisible && classes.enter)
 
 	return (
-		<div className={clsx(classes.root, className)}>
-			<div {...restProps} className={classes.selected} onClick={handleShowList}>
-				{listVisible ? null : (
-					<>
-						{selected.children}
-						<CaretDownFilled />
-					</>
-				)}
+		<div className={containerCls}>
+			<div className={classes.selected} onClick={handleShowDrop}>
+				{selected.desc}
+				<span className={classes.dropDownIcon}>
+					<CaretDownFilled />
+				</span>
 			</div>
 			{
-				<GroundGlass className={clsx(classes.optionWrapper, listVisible && classes.enter)}>
-					<Option className={classes.firstOption} value={selected.value}>
-						{selected.children}
+				<GroundGlass className={dropListCls}>
+					<Option className={classes.currentSelected} value={selected.value}>
+						{selected.desc}
 					</Option>
 					{children &&
-						React.Children.map(children, (child: any, index) =>
-							React.cloneElement(child, {
-								ref: refs[index],
-								handleChange,
-								isCurrent: index === selectedIndex,
-								timeout
-							})
-						)}
+						React.Children.map(children, (child: JSX.Element) => {
+							if (child.props.value !== selected.value) {
+								return React.cloneElement(child, { handleChange })
+							}
+						})}
 				</GroundGlass>
 			}
 		</div>
 	)
 }
 
-export default Select
+export default React.memo(Select)

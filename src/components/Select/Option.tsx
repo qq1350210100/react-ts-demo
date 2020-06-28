@@ -1,8 +1,8 @@
 import React from 'react'
 import { makeStyles } from '@material-ui/styles'
 import clsx from 'clsx'
-import TouchRipple from '../TouchRipple'
 import { ThemeNames, IColors, selectColor } from 'common/themeColors'
+import { ISelectOption } from './Select'
 
 interface IOptionProps extends React.HTMLAttributes<HTMLElement> {
 	className?: string
@@ -10,7 +10,7 @@ interface IOptionProps extends React.HTMLAttributes<HTMLElement> {
 	timeout?: number
 	value?: string
 	isCurrent?: boolean
-	handleChange?: (value?: string) => void
+	handleChange?: (option?: ISelectOption) => void
 }
 
 interface IStyleProps {
@@ -26,64 +26,56 @@ const useStyles = makeStyles({
 		position: 'relative',
 		width: '100%',
 		height: 32,
+		borderRadius: 4,
 		paddingLeft: 8,
-		transition: 'all .1s',
+		margin: '4px 0',
+		transition: 'color 100ms',
 
 		'&:hover': {
-			background: color.main
+			color: color.main
 		}
-	})
+	}),
+	text: {
+		whiteSpace: 'nowrap',
+		textOverflow: 'ellipsis',
+		overflow: 'hidden'
+	}
 })
 
-const _Option: React.ForwardRefRenderFunction<unknown, IOptionProps> = (props, ref) => {
+const Option: React.FC<IOptionProps> = props => {
 	const {
 		className,
 		children,
-		value,
+		value = '',
 		handleChange = () => {},
-		color = ThemeNames.DEFAULT,
-		timeout = 0,
-		isCurrent = false
+		color = ThemeNames.PRIMARY,
+		timeout = 200,
+		isCurrent = false,
+		...restProps
 	} = props
 
 	const styleProps: IStyleProps = {
+		color: selectColor(color),
 		timeout,
-		isCurrent,
-		color: selectColor(color)
+		isCurrent
 	}
 	const classes = useStyles(styleProps)
 
-	const { rippleRef, handleStart, handleStop } = TouchRipple.useRipple()
-
-	React.useImperativeHandle(
-		ref,
-		() => ({
-			value,
-			children
-		}),
-		[value, children]
-	)
-
 	const handleSelect = React.useCallback(() => {
-		setTimeout(() => {
-			handleChange(value)
-		}, timeout)
-	}, [value])
+		const nextOption: ISelectOption = {
+			desc: children as string,
+			value
+		}
+		handleChange(nextOption)
+	}, [value, handleChange])
+
+	const optionCls = clsx(classes.root, className)
 
 	return (
-		<div
-			className={clsx(classes.root, className)}
-			onMouseDown={handleStart}
-			onMouseUp={handleStop}
-			onMouseLeave={handleStop}
-			onClick={handleSelect}
-		>
-			<TouchRipple ref={rippleRef} color={color} />
-			{children}
+		<div {...restProps} className={optionCls} onClick={handleSelect}>
+			<span className={classes.text}>{children}</span>
 		</div>
 	)
 }
-
-const Option = React.forwardRef<unknown, IOptionProps>(_Option)
 
 export default React.memo(Option)

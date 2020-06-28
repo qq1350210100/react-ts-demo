@@ -109,4 +109,4 @@ const Ripple: React.FC<IRippleProps> = props => {
 	)
 }
 
-export default React.memo(Ripple)
+export default Ripple

@@ -215,4 +215,4 @@ const NavMenu: React.FC<INavMenuProps> = props => {
 	)
 }
 
-export default React.memo(NavMenu)
+export default NavMenu

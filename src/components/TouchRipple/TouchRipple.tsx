@@ -110,4 +110,4 @@ const _TouchRipple: React.ForwardRefRenderFunction<unknown, ITouchRippleProps> =
 
 const TouchRipple = React.forwardRef<unknown, ITouchRippleProps>(_TouchRipple)
 
-export default React.memo(TouchRipple)
+export default TouchRipple

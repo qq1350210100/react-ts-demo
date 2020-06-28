@@ -2,9 +2,7 @@ import _TouchRipple, { ITouchRippleProps } from './TouchRipple'
 import { useRipple } from './hooks'
 
 interface ITouchRippleExport
-	extends React.MemoExoticComponent<
-		React.ForwardRefExoticComponent<ITouchRippleProps & React.RefAttributes<HTMLElement>>
-	> {
+	extends React.ForwardRefExoticComponent<ITouchRippleProps & React.RefAttributes<HTMLElement>> {
 	useRipple: typeof useRipple
 }
 

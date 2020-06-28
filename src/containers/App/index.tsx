@@ -34,8 +34,8 @@ const useStyles = makeStyles(
 	createStyles({
 		app: {
 			display: 'flex',
-			// justifyContent: 'center',
-			// alignItems: 'center',
+			justifyContent: 'center',
+			alignItems: 'center',
 			width: '100vw',
 			height: '100vh'
 		},
@@ -216,16 +216,16 @@ const App: React.FC<IAppProps> = () => {
 					<List.Item>sdfdsff</List.Item>
 				</List>
 			</Collapse> */}
-			<div className={classes.menu}>
+			{/* <div className={classes.menu}>
 				<NavMenu menuOptions={navMap} color="primary" onSelect={hanldeSearch} />
-			</div>
+			</div> */}
 
-			{/* <Select>
-				<Select.Option value="primary">湛蓝</Select.Option>
+			<Select defaultValue="warning" onChange={hanldeSearch}>
+				<Select.Option value="primary">湛蓝湛蓝湛蓝湛蓝</Select.Option>
 				<Select.Option value="success">碧绿</Select.Option>
 				<Select.Option value="error">粉红</Select.Option>
 				<Select.Option value="warning">橙黄</Select.Option>
-			</Select> */}
+			</Select>
 		</div>
 	)
 }

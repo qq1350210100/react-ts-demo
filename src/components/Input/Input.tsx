@@ -154,4 +154,4 @@ const _Input: React.ForwardRefRenderFunction<unknown, IInputProps> = (props, ref
 
 const Input = React.forwardRef<unknown, IInputProps>(_Input)
 
-export default React.memo(Input)
+export default Input

@@ -114,4 +114,4 @@ const Switch: React.FC<ISwitchProps> = props => {
 	)
 }
 
-export default React.memo(Switch)
+export default Switch
