@@ -14,6 +14,8 @@ export { default as NavMenu } from './NavMenu'
 
 export { default as Paper } from './Paper'
 
+export { default as Link } from './Link'
+
 export { default as Popup } from './Popup'
 
 export { default as Progress } from './Progress'
@@ -25,3 +27,5 @@ export { default as Tag } from './Tag'
 export { default as Select } from './Select'
 
 export { default as TouchRipple } from './TouchRipple'
+
+export { default as Form } from './Form'

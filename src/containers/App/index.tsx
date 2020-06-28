@@ -25,7 +25,8 @@ import {
 	Popup,
 	Switch,
 	Tag,
-	Select
+	Select,
+	Form
 } from 'components'
 
 interface IAppProps {}
@@ -43,7 +44,8 @@ const useStyles = makeStyles(
 			width: 240,
 			// padding: 8,
 			borderRight: '1px solid #f1f1f1'
-		}
+		},
+		form: {}
 	})
 )
 
@@ -124,6 +126,8 @@ const navMap = [
 
 const App: React.FC<IAppProps> = () => {
 	const classes = useStyles()
+	
+	const form = Form.useForm()
 
 	// const {
 	// 	triggerRef,
@@ -145,6 +149,22 @@ const App: React.FC<IAppProps> = () => {
 		console.log('value', value)
 	}
 
+	const handleFormChange = (values) => {
+		console.log('values: ', values);
+	}
+
+	const handleClick = async () => {
+		// form.submit().then(res => {
+		// 	console.log('res: ', res);
+
+		// }, err => {
+		// 	console.log('err: ', err);
+
+		// })
+		const res = await form.submit()
+		console.log('res: ', res);
+	}
+
 	// const [precent, setPercent] = React.useState(0)
 	// React.useEffect(() => {
 	// 	setInterval(() => {
@@ -156,6 +176,12 @@ const App: React.FC<IAppProps> = () => {
 	const handleToggleCollapse = () => {
 		setVisible(prev => !prev)
 	}
+
+	React.useEffect(() => {
+		setTimeout(() => {
+			form.setFieldsValue({ select: 'female' })
+		}, 3000)
+	}, [])
 
 	return (
 		<div className={classes.app}>
@@ -220,12 +246,29 @@ const App: React.FC<IAppProps> = () => {
 				<NavMenu menuOptions={navMap} color="primary" onSelect={hanldeSearch} />
 			</div> */}
 
-			<Select defaultValue="warning" onChange={hanldeSearch}>
+			{/* <Select defaultValue="warning" onChange={hanldeSearch}>
 				<Select.Option value="primary">湛蓝湛蓝湛蓝湛蓝</Select.Option>
 				<Select.Option value="success">碧绿</Select.Option>
 				<Select.Option value="error">粉红</Select.Option>
 				<Select.Option value="warning">橙黄</Select.Option>
-			</Select>
+			</Select> */}
+
+			<Form className={classes.form} form={form} onValuesChange={handleFormChange}>
+				<Form.Item name="input" label="用户名">
+					<Input />
+				</Form.Item>
+				<Form.Item name="switch" label="夜间模式">
+					<Switch />
+				</Form.Item>
+				<Form.Item name="select" label="性别">
+					<Select defaultValue="all">
+						<Select.Option value="all">全部</Select.Option>
+						<Select.Option value="male">男</Select.Option>
+						<Select.Option value="female">女</Select.Option>
+					</Select>
+				</Form.Item>
+				<Button onClick={handleClick}>提交</Button>
+			</Form>
 		</div>
 	)
 }

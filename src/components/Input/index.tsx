@@ -4,7 +4,9 @@ import _TextArea from './TextArea'
 import _Group from './Group'
 
 interface IInputExport
-	extends React.ForwardRefExoticComponent<IInputProps & React.RefAttributes<HTMLElement>> {
+	extends React.MemoExoticComponent<
+		React.ForwardRefExoticComponent<IInputProps & React.RefAttributes<HTMLElement>>
+	> {
 	Search: typeof _Search
 	TextArea: typeof _TextArea
 	Group: typeof _Group

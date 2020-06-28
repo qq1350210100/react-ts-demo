@@ -14,9 +14,11 @@ export interface ISelectOption {
 export interface ISelectProps {
 	children: any
 	className?: string
+	name?: string
 	color?: string
 	defaultValue?: string
-	onChange?: (value: string) => void
+	value?: string
+	onChange?: (value?: string, name?: string) => void
 }
 
 interface IStyleProps {
@@ -50,12 +52,12 @@ const useStyles = makeStyles(
 			fontSize: 11,
 			paddingLeft: 16
 		},
-		optionWrapper: ({ dropVisible }: IStyleProps) => ({
+		dropList: ({ dropVisible }: IStyleProps) => ({
 			width: '100%',
 			position: 'absolute',
 			top: 0,
 			left: 0,
-			padding: '4px 8px',
+			padding: 0,
 			borderRadius: 4,
 			boxShadow: '0 4px 24px rgba(26,26,26,.14)',
 			overflow: 'hidden',
@@ -90,8 +92,10 @@ const Select: React.FC<ISelectProps> = props => {
 	const {
 		children,
 		className,
+		name,
 		defaultValue = '',
 		color = ThemeNames.PRIMARY,
+		value = defaultValue,
 		onChange = () => {}
 	} = props
 
@@ -110,10 +114,10 @@ const Select: React.FC<ISelectProps> = props => {
 	const handleChange = React.useCallback(
 		(option: ISelectOption) => {
 			setSelected(option)
-			onChange && onChange(option.value)
+			onChange && onChange(option.value, name)
 			handleHideDrop()
 		},
-		[onChange, handleHideDrop]
+		[onChange, handleHideDrop, name]
 	)
 
 	const styleProps: IStyleProps = {
@@ -122,18 +126,28 @@ const Select: React.FC<ISelectProps> = props => {
 	}
 	const classes = useStyles(styleProps)
 
-	React.useEffect(() => {
-		if (defaultValue && children) {
+	const handleSetOption = value => {
+		if (children) {
 			React.Children.forEach(children, (child: JSX.Element) => {
-				if (child?.props?.value === defaultValue) {
+				if (child?.props?.value === value) {
 					setSelected({
-						value: child.props.value,
-						desc: child.props.children
+						desc: child.props.children,
+						value
 					})
 				}
 			})
 		}
-	}, [defaultValue, children])
+	}
+
+	React.useEffect(() => {
+		if (defaultValue) {
+			handleSetOption(defaultValue)
+		}
+	}, [defaultValue])
+
+	React.useEffect(() => {
+		handleSetOption(value)
+	}, [value])
 
 	React.useEffect(() => {
 		if (dropVisible) {
@@ -145,29 +159,35 @@ const Select: React.FC<ISelectProps> = props => {
 	}, [dropVisible, handleHideDrop])
 
 	const containerCls = clsx(classes.root, className)
-	const dropListCls = clsx(classes.optionWrapper, dropVisible && classes.enter)
+	const dropListCls = clsx(classes.dropList, dropVisible && classes.enter)
+
+	const renderCurrentSelected = (desc: string) => (
+		<div className={classes.selected} onClick={handleShowDrop}>
+			{desc}
+			<span className={classes.dropDownIcon}>
+				<CaretDownFilled />
+			</span>
+		</div>
+	)
+
+	const renderDropList = (selected: ISelectOption) => (
+		<GroundGlass className={dropListCls}>
+			<Option className={classes.currentSelected} value={selected.value}>
+				{selected.desc}
+			</Option>
+			{children &&
+				React.Children.map(children, (child: JSX.Element) => {
+					if (child.props.value !== selected.value) {
+						return React.cloneElement(child, { handleChange })
+					}
+				})}
+		</GroundGlass>
+	)
 
 	return (
 		<div className={containerCls}>
-			<div className={classes.selected} onClick={handleShowDrop}>
-				{selected.desc}
-				<span className={classes.dropDownIcon}>
-					<CaretDownFilled />
-				</span>
-			</div>
-			{
-				<GroundGlass className={dropListCls}>
-					<Option className={classes.currentSelected} value={selected.value}>
-						{selected.desc}
-					</Option>
-					{children &&
-						React.Children.map(children, (child: JSX.Element) => {
-							if (child.props.value !== selected.value) {
-								return React.cloneElement(child, { handleChange })
-							}
-						})}
-				</GroundGlass>
-			}
+			{renderCurrentSelected(selected.desc)}
+			{renderDropList(selected)}
 		</div>
 	)
 }

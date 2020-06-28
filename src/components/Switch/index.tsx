@@ -9,8 +9,9 @@ interface ISwitchProps {
 	color?: string
 	bordered?: boolean
 	disabled?: boolean
+	name?: string
 	value?: boolean
-	onChange?: (checked?: boolean) => void
+	onChange?: (checked?: boolean, name?: string) => void
 }
 
 interface IStyleProps {
@@ -37,7 +38,7 @@ const useStyles = makeStyles(
 			alignItems: 'center',
 			width: '100%',
 			height: '100%',
-			background: checked ? color.main : '#fafafa',
+			background: checked ? color.main : '#fcfcfc',
 			paddingLeft: 4,
 			paddingRight: 4,
 			borderRadius: 10,
@@ -51,7 +52,7 @@ const useStyles = makeStyles(
 			height: 12,
 			borderRadius: '50%',
 			background: checked ? '#fff' : '#303133',
-			transform: checked ? 'translateX(19px)' : 'none',
+			transform: checked ? 'translateX(17px)' : 'none',
 			transition: 'transform .2s, background .2s'
 		})
 	})
@@ -63,6 +64,7 @@ const Switch: React.FC<ISwitchProps> = props => {
 		color = ThemeNames.PRIMARY,
 		disabled = false,
 		defaultChecked = false,
+		name,
 		value = defaultChecked,
 		onChange = () => {},
 		...restProps
@@ -79,19 +81,14 @@ const Switch: React.FC<ISwitchProps> = props => {
 
 	const handleToggle = React.useCallback(() => {
 		if (!disabled) {
-			const nextChecked = !checked
-			onChange && onChange(nextChecked)
 			setChecked(prev => !prev)
 		}
-	}, [disabled, checked, onChange])
+	}, [disabled])
 
-	const handleSwitchChange = React.useCallback(
-		(e: React.ChangeEvent<HTMLInputElement>) => {
-			const checked = e.target.checked
-			onChange && onChange(checked)
-		},
-		[onChange]
-	)
+	const handleChange = React.useCallback(e => {
+		const nextChecked = !e.target.checked
+		onChange(nextChecked, name)
+	}, [onChange, name])
 
 	React.useEffect(() => {
 		setChecked(value)
@@ -107,11 +104,12 @@ const Switch: React.FC<ISwitchProps> = props => {
 			<input
 				className={classes.checkbox}
 				type="checkbox"
+				name={name}
 				checked={checked}
-				onChange={handleSwitchChange}
+				onChange={handleChange}
 			/>
 		</div>
 	)
 }
 
-export default Switch
+export default React.memo(Switch)
