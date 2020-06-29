@@ -63,7 +63,7 @@ const useStyles = makeStyles(
 			overflow: 'hidden',
 			zIndex: dropVisible ? 999 : -1,
 			opacity: dropVisible ? 1 : 0,
-			transformOrigin: '0 0'
+			transformOrigin: '50% 0'
 		}),
 		currentSelected: ({ color }: IStyleProps) => ({
 			color: color.main,

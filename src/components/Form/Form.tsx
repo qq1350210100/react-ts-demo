@@ -1,11 +1,18 @@
 import React from 'react'
 import { makeStyles, createStyles } from '@material-ui/styles'
 import clsx from 'clsx'
-import { IValues } from './hooks'
+import { IValues, IErrors, IError, IOnChange } from './hooks'
 
-interface IForm {
-	values: IValues
-	onChange: (value?: string, name?: string) => void
+interface IContextProps {
+	values?: IValues
+	errors?: IErrors
+	onChange: IOnChange
+	setFieldError: (error: IError) => void
+	deleteFieldError: (targetName?: string) => void
+	validateFields: (...fields: string[]) => Promise<void>
+}
+
+interface IForm extends IContextProps {
 	getFieldValue?: (name: string) => void
 	setFieldsValue?: (newValues: IValues) => void
 }
@@ -30,7 +37,12 @@ const useStyles = makeStyles(
 	})
 )
 
-const defaultCtx = { values: {}, onChange() {} }
+const defaultCtx: IContextProps = {
+	onChange() {},
+	validateFields: async () => {},
+	setFieldError() {},
+	deleteFieldError() {}
+}
 
 export const FormContext = React.createContext(defaultCtx)
 
@@ -38,8 +50,15 @@ const Form: React.FC<IFormProps> = props => {
 	const {
 		children,
 		className,
-		form: { values, onChange = () => {} } = {},
 		onValuesChange = () => {},
+		form: {
+			values,
+			errors = [],
+			onChange = () => {},
+			validateFields = async () => {},
+			setFieldError = () => {},
+			deleteFieldError = () => {}
+		} = {},
 		...restProps
 	} = props
 
@@ -54,8 +73,12 @@ const Form: React.FC<IFormProps> = props => {
 	return (
 		<FormContext.Provider
 			value={{
-				values: values ?? {},
-				onChange
+				values,
+				errors,
+				onChange,
+				validateFields,
+				setFieldError,
+				deleteFieldError
 			}}
 		>
 			<form {...restProps} className={formCls}>

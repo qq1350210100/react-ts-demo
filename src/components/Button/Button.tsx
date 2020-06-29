@@ -2,6 +2,7 @@ import React from 'react'
 import clsx from 'clsx'
 import { makeStyles, createStyles } from '@material-ui/styles'
 import { ThemeNames, IColors, selectColor } from 'common/themeColors'
+import ButtonBase from './ButtonBase'
 import TouchRipple from '../TouchRipple'
 
 export interface IButtonProps extends React.ButtonHTMLAttributes<HTMLElement> {
@@ -28,8 +29,6 @@ const useStyles = makeStyles(
 			height: 32,
 			background: color.main,
 			padding: '4px 16px',
-			outline: 0,
-			border: 0,
 			borderRadius: 4,
 			// default背景色太浅导致阴影明显，使得轮廓看起来比较大。单独调整下阴影
 			boxShadow: `0 ${color.name === ThemeNames.DEFAULT ? '0 1px' : '1px 3px'} rgba(26,26,26,.1)`,
@@ -53,7 +52,7 @@ const _Button: React.ForwardRefRenderFunction<unknown, IButtonProps> = (props, r
 	const btnCls = clsx(classes.btn, className)
 
 	return (
-		<button
+		<ButtonBase
 			type="button"
 			{...restProps}
 			ref={ref as any}
@@ -64,7 +63,7 @@ const _Button: React.ForwardRefRenderFunction<unknown, IButtonProps> = (props, r
 		>
 			{<TouchRipple ref={rippleRef} color={color} />}
 			{children}
-		</button>
+		</ButtonBase>
 	)
 }
 

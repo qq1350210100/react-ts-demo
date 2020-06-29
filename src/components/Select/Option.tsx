@@ -28,7 +28,6 @@ const useStyles = makeStyles({
 		height: 32,
 		borderRadius: 4,
 		paddingLeft: 8,
-		margin: '4px 0',
 		transition: 'color 100ms',
 
 		'&:hover': {

@@ -2,6 +2,7 @@ import React from 'react'
 import { makeStyles, createStyles } from '@material-ui/styles'
 import clsx from 'clsx'
 import { ThemeNames, IColors, selectColor } from 'common/themeColors'
+import ButtonBase from '../Button/ButtonBase'
 
 interface ISwitchProps {
 	className?: string
@@ -22,22 +23,13 @@ interface IStyleProps {
 
 const useStyles = makeStyles(
 	createStyles({
-		root: {
+		root: ({ checked, color, disabled }: IStyleProps) => ({
 			display: 'flex',
 			justifyContent: 'space-between',
 			alignItems: 'center',
 			width: 40,
 			height: 20,
-			position: 'relative'
-		},
-		checkbox: {
-			display: 'none'
-		},
-		switch: ({ checked, color, disabled }: IStyleProps) => ({
-			display: 'flex',
-			alignItems: 'center',
-			width: '100%',
-			height: '100%',
+			position: 'relative',
 			background: checked ? color.main : '#fcfcfc',
 			paddingLeft: 4,
 			paddingRight: 4,
@@ -45,14 +37,21 @@ const useStyles = makeStyles(
 			border: checked ? 'rgba(0,0,0,0)' : '1px solid #e2e2e2',
 			opacity: disabled ? 0.5 : 1,
 			cursor: disabled ? 'not-allowed' : 'pointer',
-			transition: 'border .2s, background .2s'
+			transition: 'border .2s, background .2s',
+
+			'&>div': {
+				display: 'flex',
+				alignItems: 'center',
+				width: '100%',
+				height: '100%'
+			}
 		}),
 		button: ({ checked }: IStyleProps) => ({
 			width: 12,
 			height: 12,
 			borderRadius: '50%',
 			background: checked ? '#fff' : '#303133',
-			transform: checked ? 'translateX(17px)' : 'none',
+			transform: checked ? 'translateX(19px)' : 'none',
 			transition: 'transform .2s, background .2s'
 		})
 	})
@@ -65,7 +64,7 @@ const Switch: React.FC<ISwitchProps> = props => {
 		disabled = false,
 		defaultChecked = false,
 		name,
-		value = defaultChecked,
+		value = false,
 		onChange = () => {},
 		...restProps
 	} = props
@@ -81,14 +80,12 @@ const Switch: React.FC<ISwitchProps> = props => {
 
 	const handleToggle = React.useCallback(() => {
 		if (!disabled) {
-			setChecked(prev => !prev)
+			onChange(!checked, name)
+			setChecked(prev => {
+				return !prev
+			})
 		}
-	}, [disabled])
-
-	const handleChange = React.useCallback(e => {
-		const nextChecked = !e.target.checked
-		onChange(nextChecked, name)
-	}, [onChange, name])
+	}, [disabled, onChange, checked, name])
 
 	React.useEffect(() => {
 		setChecked(value)
@@ -97,18 +94,11 @@ const Switch: React.FC<ISwitchProps> = props => {
 	const switchCls = clsx(classes.root, className)
 
 	return (
-		<div {...restProps} className={switchCls}>
-			<div className={classes.switch} onClick={handleToggle}>
+		<ButtonBase type="button" {...restProps} className={switchCls}>
+			<div onClick={handleToggle}>
 				<span className={classes.button}></span>
 			</div>
-			<input
-				className={classes.checkbox}
-				type="checkbox"
-				name={name}
-				checked={checked}
-				onChange={handleChange}
-			/>
-		</div>
+		</ButtonBase>
 	)
 }
 

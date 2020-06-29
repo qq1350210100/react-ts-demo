@@ -45,7 +45,9 @@ const useStyles = makeStyles(
 			// padding: 8,
 			borderRight: '1px solid #f1f1f1'
 		},
-		form: {}
+		form: {
+			maxWidth: 400,
+		}
 	})
 )
 
@@ -177,9 +179,18 @@ const App: React.FC<IAppProps> = () => {
 		setVisible(prev => !prev)
 	}
 
+	const validateRequred = async (value, callback) => {
+		console.log('validate: ', value);
+		if (!value) {
+			callback('必填！')
+		} else {
+			callback()
+		}
+	}
+
 	React.useEffect(() => {
 		setTimeout(() => {
-			form.setFieldsValue({ select: 'female' })
+			form.setFieldsValue({ input: 'Test form set value', select: 'female', switch: true })
 		}, 3000)
 	}, [])
 
@@ -254,10 +265,10 @@ const App: React.FC<IAppProps> = () => {
 			</Select> */}
 
 			<Form className={classes.form} form={form} onValuesChange={handleFormChange}>
-				<Form.Item name="input" label="用户名">
+				<Form.Item name="input" label="用户名" validator={validateRequred}>
 					<Input />
 				</Form.Item>
-				<Form.Item name="switch" label="夜间模式">
+				<Form.Item name="switch" label="护眼模式">
 					<Switch />
 				</Form.Item>
 				<Form.Item name="select" label="性别">
@@ -267,7 +278,7 @@ const App: React.FC<IAppProps> = () => {
 						<Select.Option value="female">女</Select.Option>
 					</Select>
 				</Form.Item>
-				<Button onClick={handleClick}>提交</Button>
+				<Button color="primary" onClick={handleClick}>提交</Button>
 			</Form>
 		</div>
 	)

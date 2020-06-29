@@ -2,6 +2,7 @@ import React from 'react'
 import clsx from 'clsx'
 import { makeStyles, createStyles } from '@material-ui/styles'
 import { ThemeNames, IColors, selectColor } from 'common/themeColors'
+import ButtonBase from './ButtonBase'
 import TouchRipple from '../TouchRipple'
 
 export interface IStyleProps {
@@ -59,7 +60,8 @@ const _IconButton: React.ForwardRefRenderFunction<unknown, IIconButtonProps> = (
 	const btnCls = clsx(classes.iconBtn, className)
 
 	return (
-		<div
+		<ButtonBase
+			type="button"
 			{...restProps}
 			ref={ref as any}
 			className={btnCls}
@@ -69,7 +71,7 @@ const _IconButton: React.ForwardRefRenderFunction<unknown, IIconButtonProps> = (
 		>
 			<TouchRipple ref={rippleRef} color={color} centered timeout={500} />
 			{children}
-		</div>
+		</ButtonBase>
 	)
 }
 
