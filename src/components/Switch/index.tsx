@@ -12,6 +12,7 @@ interface ISwitchProps {
 	disabled?: boolean
 	name?: string
 	value?: boolean
+	error?: boolean
 	onChange?: (checked?: boolean, name?: string) => void
 }
 
@@ -65,6 +66,7 @@ const Switch: React.FC<ISwitchProps> = props => {
 		defaultChecked = false,
 		name,
 		value = false,
+		error = false,
 		onChange = () => {},
 		...restProps
 	} = props

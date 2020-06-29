@@ -3,23 +3,21 @@ import { makeStyles, createStyles } from '@material-ui/styles'
 import clsx from 'clsx'
 import { IValues, IErrors, IError, IOnChange } from './hooks'
 
-interface IContextProps {
+interface IForm {
 	values?: IValues
 	errors?: IErrors
 	onChange: IOnChange
-	setFieldError: (error: IError) => void
-	deleteFieldError: (targetName?: string) => void
-	validateFields: (...fields: string[]) => Promise<void>
-}
-
-interface IForm extends IContextProps {
 	getFieldValue?: (name: string) => void
-	setFieldsValue?: (newValues: IValues) => void
+	setFieldsValue?: (newValues?: IValues) => void
+	setFieldError: (error: IError) => void
+	cleanFieldError: (...names: string[]) => void
+	validateFields: (...name: string[]) => Promise<void>
 }
 
 export interface IFormProps extends React.FormHTMLAttributes<HTMLFormElement> {
 	className?: string
 	form?: IForm
+	initialValues?: IValues
 	onValuesChange?: (values?: IValues) => void
 }
 
@@ -37,50 +35,43 @@ const useStyles = makeStyles(
 	})
 )
 
-const defaultCtx: IContextProps = {
+const defaultCtx: IForm = {
 	onChange() {},
-	validateFields: async () => {},
+	getFieldValue() {},
+	setFieldsValue() {},
 	setFieldError() {},
-	deleteFieldError() {}
+	cleanFieldError() {},
+	validateFields: async () => {},
 }
 
-export const FormContext = React.createContext(defaultCtx)
+export const FormContext = React.createContext<IForm>(defaultCtx)
 
 const Form: React.FC<IFormProps> = props => {
 	const {
 		children,
 		className,
+		initialValues = {},
 		onValuesChange = () => {},
-		form: {
-			values,
-			errors = [],
-			onChange = () => {},
-			validateFields = async () => {},
-			setFieldError = () => {},
-			deleteFieldError = () => {}
-		} = {},
+		form = {} as IForm,
 		...restProps
 	} = props
 
 	const classes = useStyles()
 
 	React.useEffect(() => {
-		onValuesChange(values)
-	}, [values, onValuesChange])
+		if (form?.setFieldsValue) {
+			form.setFieldsValue(initialValues)
+		}
+	}, [])
+
+	React.useEffect(() => {
+		onValuesChange(form.values)
+	}, [form.values, onValuesChange])
 
 	const formCls = clsx(classes.root, className)
 
 	return (
-		<FormContext.Provider
-			value={{
-				values,
-				errors,
-				onChange,
-				validateFields,
-				setFieldError,
-				deleteFieldError
-			}}
-		>
+		<FormContext.Provider value={form}>
 			<form {...restProps} className={formCls}>
 				{children}
 			</form>

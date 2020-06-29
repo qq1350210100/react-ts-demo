@@ -18,6 +18,7 @@ export interface ISelectProps {
 	color?: string
 	defaultValue?: string
 	value?: string
+	error?: boolean
 	onChange?: (value?: string, name?: string) => void
 }
 
@@ -96,6 +97,7 @@ const Select: React.FC<ISelectProps> = props => {
 		defaultValue = '',
 		color = ThemeNames.PRIMARY,
 		value = defaultValue,
+		error = false,
 		onChange = () => {}
 	} = props
 

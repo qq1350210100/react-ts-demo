@@ -1,7 +1,7 @@
 import React from 'react'
 
 export interface IValues {
-	(key?: string): string | boolean | undefined
+	[key: string]: string | boolean | undefined
 }
 
 export interface IError {
@@ -43,11 +43,11 @@ export const useForm = () => {
 		}))
 	}
 
-	const validateFields = async (...fields: string[]) => {
-		if (fields.length === 0) {
-			console.log('validate all')
+	const validateFields = async (...names: string[]) => {
+		if (names.length) {
+			console.log('names', names)
 		} else {
-			console.log('fields', fields)
+			console.log('validate all')
 		}
 	}
 
@@ -64,9 +64,11 @@ export const useForm = () => {
 		setErrors(prev => [...prev, newError])
 	}
 
-	const deleteFieldError = (targetName?: string) => {
-		if (targetName) {
-			setErrors(prev => prev.filter(err => err.name !== targetName))
+	const cleanFieldError = (...names: string[]) => {
+		if (names.length) {
+			names.forEach(name => {
+				setErrors(prev => prev.filter(err => err.name !== name))
+			})
 		} else {
 			setErrors([])
 		}
@@ -77,7 +79,7 @@ export const useForm = () => {
 		values,
 		errors,
 		setFieldError,
-		deleteFieldError,
+		cleanFieldError,
 		submit,
 		getFieldValue,
 		setFieldsValue,

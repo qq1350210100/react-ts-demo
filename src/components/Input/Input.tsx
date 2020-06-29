@@ -11,7 +11,7 @@ export interface IInputProps extends React.HTMLAttributes<HTMLElement> {
 	inputClassName?: string
 	name?: string
 	value?: string
-	values?: any
+	error?: boolean
 	placeholder?: string
 	type?: string
 	color?: string
@@ -25,6 +25,7 @@ interface IStyleProps {
 	color: IColors
 	focus: boolean
 	disabled: boolean
+	error: boolean
 	type: string
 }
 
@@ -44,18 +45,24 @@ const useStyles = makeStyles(
 			// Input.Group compact用到，防止box-shadow被遮挡
 			zIndex: ({ focus }: IStyleProps) => (focus ? 1 : 0),
 			width: 200,
-			height: 30,
+			height: 32,
 			minWidth: 200,
-			minHeight: 28,
+			minHeight: 32,
 			position: 'relative'
 		},
-		input: ({ color, focus, disabled, type }: IStyleProps) => ({
-			paddingRight: type === InputTypes.SEARCH ? 32 : 8,
-			border: `1px solid ${focus ? color.main : '#e5e5e5'}`,
-			boxShadow: `0 0 0 ${focus ? '2px' : '6px'} ${hex2Rgba(color.main, focus ? 0.7 : 0)}`,
-			opacity: disabled ? 0.5 : 1,
-			cursor: disabled ? 'not-allowed' : 'default'
-		})
+		input: ({ color, focus, disabled, error, type }: IStyleProps) => {
+			const errorColor = selectColor(ThemeNames.ERROR)
+			const bdColor = error ? errorColor.main : focus ? color.main : '#e5e5e5'
+			const bdWidth = focus ? '2px' : '6px'
+			const bxsColor = hex2Rgba(error ? errorColor.main : color.main, focus ? 0.7 : 0)
+			return {
+				paddingRight: type === InputTypes.SEARCH ? 32 : 8,
+				border: `1px solid ${bdColor}`,
+				boxShadow: `0 0 0 ${bdWidth} ${bxsColor}`,
+				opacity: disabled ? 0.5 : 1,
+				cursor: disabled ? 'not-allowed' : 'default'
+			}
+		}
 	})
 )
 
@@ -65,7 +72,7 @@ const _Input: React.ForwardRefRenderFunction<unknown, IInputProps> = (props, ref
 		inputClassName,
 		name,
 		value = '',
-		values = {},
+		error = false,
 		placeholder,
 		type = InputTypes.TEXT,
 		color = ThemeNames.PRIMARY,
@@ -80,7 +87,7 @@ const _Input: React.ForwardRefRenderFunction<unknown, IInputProps> = (props, ref
 	const [inputVal, setInputVal] = React.useState<string>('')
 	const [focus, setFocus] = React.useState<boolean>(false)
 
-	const styleProps: IStyleProps = { type, focus, disabled, color: selectColor(color) }
+	const styleProps: IStyleProps = { type, focus, disabled, error, color: selectColor(color) }
 	const classes = useStyles(styleProps)
 
 	const handleInputFocus: IFocus = React.useCallback(
@@ -105,7 +112,7 @@ const _Input: React.ForwardRefRenderFunction<unknown, IInputProps> = (props, ref
 			setInputVal(keywords)
 			onChange && onChange(keywords, name)
 		},
-		[onChange, values, name]
+		[onChange, name]
 	)
 
 	const handleSearch = React.useCallback(() => {
