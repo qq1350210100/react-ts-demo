@@ -34,7 +34,7 @@ const Group: React.FC<IGroupProps> = props => {
 	const childNum = React.Children.count(children)
 	return (
 		<div className={clsx(classes.root, className)}>
-			{React.Children.map(children, (child: any, index) => {
+			{React.Children.map(children as any, (child: JSX.Element, index) => {
 				const {
 					props: { inputClassName: oldInputCls }
 				} = child

@@ -42,11 +42,6 @@ const useStyles = makeStyles(
 			'&:hover': {
 				color: '#303133',
 				background: 'rgba(160, 160, 160, .1)'
-				// color: textColor
-				// 	? textColor.name === ThemeNames.DEFAULT
-				// 		? '#000'
-				// 		: textColor.main
-				// 	: color.text
 			},
 
 			'&:first-child': {

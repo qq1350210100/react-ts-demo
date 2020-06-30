@@ -13,7 +13,7 @@ const _Popup: React.ForwardRefRenderFunction<unknown, IPopupProps> = (props, ref
 
 	return (
 		<TransitionGroup component={null}>
-			{visible ? <Window ref={ref} {...windowProps} /> : null}
+			{visible && <Window ref={ref} {...windowProps} />}
 		</TransitionGroup>
 	)
 }

@@ -2,14 +2,12 @@ import React from 'react'
 import { makeStyles, createStyles } from '@material-ui/styles'
 import clsx from 'clsx'
 import { ThemeNames, IColors, selectColor } from 'common/themeColors'
+import { useTransition, ITransitionOpts } from 'common/hooks'
 
-export interface IRippleProps {
+export interface IRippleProps extends ITransitionOpts {
 	rippleX: number
 	rippleY: number
 	rippleSize: number
-	in?: boolean
-	onExited?: () => void
-	timeout?: number
 	color?: string
 }
 
@@ -73,7 +71,7 @@ const Ripple: React.FC<IRippleProps> = props => {
 		rippleX,
 		rippleY,
 		rippleSize,
-		in: visible,
+		in: inProp,
 		onExited = () => {},
 		color = ThemeNames.DEFAULT,
 		timeout = 0
@@ -90,17 +88,14 @@ const Ripple: React.FC<IRippleProps> = props => {
 	const styleProps: IStyleProps = { styles, timeout, color: selectColor(color) }
 	const classes = useStyles(styleProps)
 
-	React.useEffect(() => {
-		// 组件延迟卸载
-		if (!visible) {
+	useTransition({
+		onExited,
+		timeout,
+		in: inProp,
+		callback: () => {
 			setLeave(true)
-			const timer = setTimeout(onExited, timeout)
-
-			return () => {
-				clearTimeout(timer)
-			}
 		}
-	}, [visible, onExited, timeout])
+	})
 
 	return (
 		<span className={clsx(classes.ripple, classes.enter)}>
@@ -109,4 +104,4 @@ const Ripple: React.FC<IRippleProps> = props => {
 	)
 }
 
-export default Ripple
+export default React.memo(Ripple)

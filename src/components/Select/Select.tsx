@@ -2,9 +2,9 @@ import React from 'react'
 import { makeStyles, createStyles } from '@material-ui/styles'
 import clsx from 'clsx'
 import { CaretDownFilled } from '@ant-design/icons'
+import { TransitionGroup } from 'react-transition-group'
 import { ThemeNames, IColors, selectColor } from 'common/themeColors'
-import Option from './Option'
-import GroundGlass from '../GroundGlass'
+import DropList from './DropList'
 
 export interface ISelectOption {
 	value: string
@@ -36,7 +36,7 @@ const useStyles = makeStyles(
 			cursor: 'pointer',
 			userSelect: 'none'
 		},
-		selected: {
+		select: ({ dropVisible, color }: IStyleProps) => ({
 			boxSizing: 'border-box',
 			display: 'flex',
 			alignItems: 'center',
@@ -47,44 +47,15 @@ const useStyles = makeStyles(
 			paddingLeft: 8,
 			paddingRight: 8,
 			borderRadius: 4,
-			border: '1px solid #e2e2e2'
-		},
+			border: `1px solid ${dropVisible ? color.bright : '#e2e2e2'}`,
+			color: dropVisible ? '#606266' : '#303133',
+			transition: 'all 100ms'
+		}),
 		dropDownIcon: {
+			color: '#606266',
 			fontSize: 11,
-			paddingLeft: 16
-		},
-		dropList: ({ dropVisible }: IStyleProps) => ({
-			width: '100%',
-			position: 'absolute',
-			top: 0,
-			left: 0,
-			padding: 0,
-			borderRadius: 4,
-			boxShadow: '0 4px 24px rgba(26,26,26,.14)',
-			overflow: 'hidden',
-			zIndex: dropVisible ? 999 : -1,
-			opacity: dropVisible ? 1 : 0,
-			transformOrigin: '50% 0'
-		}),
-		currentSelected: ({ color }: IStyleProps) => ({
-			color: color.main,
-			background: color.ripple,
-
-			'&:hover': {
-				background: color.ripple
-			}
-		}),
-		enter: {
-			animation: '$kf_enter ease-out',
-			animationDuration: '200ms'
-		},
-		'@keyframes kf_enter': {
-			'0%': {
-				transform: 'scale(.6)'
-			},
-			'100%': {
-				transform: 'scale(1)'
-			}
+			transform: ({ dropVisible }: IStyleProps) => (dropVisible ? 'rotate(180deg)' : 'rotate(0)'),
+			transition: 'transform 100ms'
 		}
 	})
 )
@@ -161,35 +132,22 @@ const Select: React.FC<ISelectProps> = props => {
 	}, [dropVisible, handleHideDrop])
 
 	const containerCls = clsx(classes.root, className)
-	const dropListCls = clsx(classes.dropList, dropVisible && classes.enter)
-
-	const renderCurrentSelected = (desc: string) => (
-		<div className={classes.selected} onClick={handleShowDrop}>
-			{desc}
-			<span className={classes.dropDownIcon}>
-				<CaretDownFilled />
-			</span>
-		</div>
-	)
-
-	const renderDropList = (selected: ISelectOption) => (
-		<GroundGlass className={dropListCls}>
-			<Option className={classes.currentSelected} value={selected.value}>
-				{selected.desc}
-			</Option>
-			{children &&
-				React.Children.map(children, (child: JSX.Element) => {
-					if (child.props.value !== selected.value) {
-						return React.cloneElement(child, { handleChange })
-					}
-				})}
-		</GroundGlass>
-	)
 
 	return (
 		<div className={containerCls}>
-			{renderCurrentSelected(selected.desc)}
-			{renderDropList(selected)}
+			<div className={classes.select} onClick={handleShowDrop}>
+				{selected.desc}
+				<span className={classes.dropDownIcon}>
+					<CaretDownFilled />
+				</span>
+			</div>
+			<TransitionGroup component={null}>
+				{dropVisible && (
+					<DropList selected={selected} handleChange={handleChange}>
+						{children}
+					</DropList>
+				)}
+			</TransitionGroup>
 		</div>
 	)
 }

@@ -21,20 +21,30 @@ interface IStyleProps {
 
 const useStyles = makeStyles({
 	root: ({ color, isCurrent }: IStyleProps) => ({
-		display: isCurrent ? 'none' : 'flex',
+		display: 'flex',
 		alignItems: 'center',
 		position: 'relative',
 		width: '100%',
 		height: 32,
-		borderRadius: 4,
-		paddingLeft: 8,
-		transition: 'color 100ms',
+		transition: 'background 100ms',
 
 		'&:hover': {
-			color: color.main
-		}
+			background: 'rgba(160, 160, 160, .1)'
+		},
+
+		...(isCurrent
+			? {
+					color: color.main,
+					background: color.ripple,
+
+					'&:hover': {
+						background: color.ripple
+					}
+			  }
+			: {})
 	}),
 	text: {
+		marginLeft: 8,
 		whiteSpace: 'nowrap',
 		textOverflow: 'ellipsis',
 		overflow: 'hidden'

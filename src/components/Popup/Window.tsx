@@ -1,13 +1,11 @@
 import React from 'react'
 import { makeStyles, createStyles } from '@material-ui/styles'
 import clsx from 'clsx'
+import { useTransition, ITransitionOpts } from 'common/hooks'
 import Paper from '../Paper'
 
-export interface IWindowProps extends React.RefAttributes<HTMLElement> {
+export interface IWindowProps extends ITransitionOpts {
 	className?: string
-	in?: boolean
-	onExited?: () => {}
-	timeout?: number
 }
 
 const useStyles = makeStyles(
@@ -32,14 +30,14 @@ const useStyles = makeStyles(
 				transform: 'translateY(32px)'
 			},
 			'100%': {
-				zIndex: 0,
+				zIndex: 999,
 				opacity: 1,
 				transform: 'translateY(0)'
 			}
 		},
 		'@keyframes leave': {
 			from: {
-				zIndex: 0,
+				zIndex: 999,
 				opacity: 1,
 				transform: 'translateY(0)'
 			},
@@ -64,14 +62,7 @@ const _Window: React.ForwardRefRenderFunction<unknown, IWindowProps> = (props, r
 
 	const classes = useStyles()
 
-	React.useEffect(() => {
-		if (!inProp) {
-			const exitTimer = setTimeout(onExited, timeout)
-			return () => {
-				clearTimeout(exitTimer)
-			}
-		}
-	}, [inProp, onExited, timeout])
+	useTransition({ in: inProp, onExited, timeout })
 
 	const containerCls = clsx(classes.root, className, inProp ? classes.enter : classes.leave)
 

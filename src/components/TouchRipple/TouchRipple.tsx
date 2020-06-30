@@ -22,7 +22,6 @@ const useStyles = makeStyles(
 			overflow: 'hidden',
 			pointerEvents: 'none',
 			position: 'absolute',
-			zIndex: 0,
 			top: 0,
 			right: 0,
 			bottom: 0,
@@ -110,4 +109,4 @@ const _TouchRipple: React.ForwardRefRenderFunction<unknown, ITouchRippleProps> =
 
 const TouchRipple = React.forwardRef<unknown, ITouchRippleProps>(_TouchRipple)
 
-export default TouchRipple
+export default React.memo(TouchRipple)

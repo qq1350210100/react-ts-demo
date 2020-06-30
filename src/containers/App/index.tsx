@@ -139,7 +139,7 @@ const App: React.FC<IAppProps> = () => {
 	// 	handleHidePopup
 	// } = Popup.usePopupVisible()
 
-	const [visible, setVisible] = useState<boolean>(false)
+	// const [visible, setVisible] = useState<boolean>(false)
 
 	const handleConsole = () => {
 		console.log('Hello')
@@ -163,8 +163,14 @@ const App: React.FC<IAppProps> = () => {
 		// 	console.log('err: ', err);
 
 		// })
-		const res = await form.submit()
-		console.log('res: ', res)
+		try {
+			
+			const res = await form.submit()
+			console.log('res: ', res)
+		} catch (err) {
+			console.error('err: ', err);
+			
+		}
 	}
 
 	// const [precent, setPercent] = React.useState(0)
@@ -175,9 +181,9 @@ const App: React.FC<IAppProps> = () => {
 	// 	}, 1000)
 	// }, [])
 
-	const handleToggleCollapse = () => {
-		setVisible(prev => !prev)
-	}
+	// const handleToggleCollapse = () => {
+	// 	setVisible(prev => !prev)
+	// }
 
 	const validateRequred = async (value, callback) => {
 		console.log('validate: ', value)
@@ -190,7 +196,7 @@ const App: React.FC<IAppProps> = () => {
 
 	React.useEffect(() => {
 		setTimeout(() => {
-			form.setFieldsValue({ input: 'Test form set value', select: 'female', switch: true })
+			form.setFieldsValue({ input: '', select: 'female', switch: true })
 		}, 4000)
 	}, [])
 
