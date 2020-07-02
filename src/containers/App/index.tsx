@@ -152,25 +152,21 @@ const App: React.FC<IAppProps> = () => {
 	}
 
 	const handleFormChange = values => {
-		console.log('values: ', values)
+		// console.log('values: ', values)
 	}
 
 	const handleClick = async () => {
 		// form.submit().then(res => {
 		// 	console.log('res: ', res);
-
 		// }, err => {
 		// 	console.log('err: ', err);
-
 		// })
-		try {
-			
-			const res = await form.submit()
-			console.log('res: ', res)
-		} catch (err) {
-			console.error('err: ', err);
-			
-		}
+		// try {
+		// 	const res = await form.submit()
+		// 	console.log('res: ', res)
+		// } catch (err) {
+		// 	console.error('err: ', err);
+		// }
 	}
 
 	// const [precent, setPercent] = React.useState(0)
@@ -185,8 +181,16 @@ const App: React.FC<IAppProps> = () => {
 	// 	setVisible(prev => !prev)
 	// }
 
+	const handleFinished = values => {
+		console.log('handleFinished: ', values)
+	}
+
+	const handleFailed = errors => {
+		console.log('handleFailed: ', errors)
+	}
+
 	const validateRequred = async (value, callback) => {
-		console.log('validate: ', value)
+		// console.log('validate: ', value)
 		if (!value) {
 			callback('必填！')
 		} else {
@@ -196,7 +200,7 @@ const App: React.FC<IAppProps> = () => {
 
 	React.useEffect(() => {
 		setTimeout(() => {
-			form.setFieldsValue({ input: '', select: 'female', switch: true })
+			form.setFieldsValue({ input: '', password: 'password', select: 'female', switch: true })
 		}, 4000)
 	}, [])
 
@@ -275,11 +279,13 @@ const App: React.FC<IAppProps> = () => {
 				form={form}
 				initialValues={{ input: 'Test form set value' }}
 				onValuesChange={handleFormChange}
+				onFinished={handleFinished}
+				onFailed={handleFailed}
 			>
 				<Form.Item name="input" label="用户名" validator={validateRequred}>
 					<Input />
 				</Form.Item>
-				<Form.Item name="password" label="密码" initialValue="password" validator={validateRequred}>
+				<Form.Item name="password" label="密码" initialValue="" validator={validateRequred}>
 					<Input />
 				</Form.Item>
 				<Form.Item name="switch" label="护眼模式" initialValue={true}>
@@ -292,9 +298,11 @@ const App: React.FC<IAppProps> = () => {
 						<Select.Option value="female">女</Select.Option>
 					</Select>
 				</Form.Item>
-				<Button color="primary" onClick={handleClick}>
-					提交
-				</Button>
+				<Form.Item>
+					<Button htmlType="submit" color="primary" onClick={handleClick}>
+						提交
+					</Button>
+				</Form.Item>
 			</Form>
 		</div>
 	)

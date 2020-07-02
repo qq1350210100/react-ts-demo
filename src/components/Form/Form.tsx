@@ -1,17 +1,10 @@
 import React from 'react'
 import { makeStyles, createStyles } from '@material-ui/styles'
 import clsx from 'clsx'
-import { IValues, IErrors, IError, IOnChange } from './hooks'
+import { IForm, IValues, useForm, IErrors } from './hooks'
 
-interface IForm {
-	values?: IValues
-	errors?: IErrors
-	onChange: IOnChange
-	getFieldValue?: (name: string) => void
-	setFieldsValue?: (newValues?: IValues) => void
-	setFieldError: (error: IError) => void
-	cleanFieldError: (...names: string[]) => void
-	validateFields: (...name: string[]) => Promise<void>
+export interface ICallback {
+	(desc: string): void
 }
 
 export interface IFormProps extends React.FormHTMLAttributes<HTMLFormElement> {
@@ -19,6 +12,8 @@ export interface IFormProps extends React.FormHTMLAttributes<HTMLFormElement> {
 	form?: IForm
 	initialValues?: IValues
 	onValuesChange?: (values?: IValues) => void
+	onFinished?: (values: IValues) => void
+	onFailed?: (errors: IErrors) => void
 }
 
 const useStyles = makeStyles(
@@ -36,42 +31,64 @@ const useStyles = makeStyles(
 )
 
 const defaultCtx: IForm = {
+	submit: () => ({} as any),
 	onChange() {},
+	syncFormItem() {},
 	getFieldValue() {},
 	setFieldsValue() {},
-	setFieldError() {},
-	cleanFieldError() {},
-	validateFields: async () => {},
+	validateFields: async () => 'pending'
 }
 
 export const FormContext = React.createContext<IForm>(defaultCtx)
 
 const Form: React.FC<IFormProps> = props => {
+	// form 不传时自动创建
+	const defaultForm = useForm()
+
 	const {
 		children,
 		className,
 		initialValues = {},
+		form = defaultForm,
 		onValuesChange = () => {},
-		form = {} as IForm,
+		onFinished = () => {},
+		onFailed = () => {},
 		...restProps
 	} = props
+
+	const customSubmit = React.useCallback(
+		() =>
+			form.submit().then(
+				res => {
+					onFinished(res as IValues)
+					return res
+				},
+				err => {
+					onFailed(err as IErrors)
+					return err
+				}
+			),
+		[onFinished, onFailed]
+	)
 
 	const classes = useStyles()
 
 	React.useEffect(() => {
-		if (form?.setFieldsValue) {
+		if (form.setFieldsValue) {
 			form.setFieldsValue(initialValues)
 		}
 	}, [])
 
 	React.useEffect(() => {
 		onValuesChange(form.values)
-	}, [form.values, onValuesChange])
+	}, [form.values])
 
 	const formCls = clsx(classes.root, className)
 
+	const formCtx = { ...form, submit: customSubmit }
+
 	return (
-		<FormContext.Provider value={form}>
+		<FormContext.Provider value={formCtx}>
 			<form {...restProps} className={formCls}>
 				{children}
 			</form>

@@ -2,11 +2,7 @@ import React from 'react'
 import { makeStyles, createStyles } from '@material-ui/styles'
 import clsx from 'clsx'
 import { FormContext } from './Form'
-import { IOnChange } from './hooks'
-
-export interface ICallback {
-	(desc: string): void
-}
+import { ICallback } from './hooks'
 
 const useStyles = makeStyles(
 	createStyles({
@@ -38,7 +34,7 @@ const useStyles = makeStyles(
 	})
 )
 
-interface IValidator {
+export interface IValidator {
 	(value?: string | boolean, callback?: ICallback): Promise<void>
 }
 
@@ -54,41 +50,24 @@ const FormItem: React.FC<IFormItemProps> = props => {
 	const { children, className, label, name, initialValue, validator } = props
 
 	const ctxProps = React.useContext(FormContext)
-	const {
-		values = {},
-		errors = [],
-		onChange,
-		setFieldError,
-		cleanFieldError,
-		setFieldsValue
-	} = ctxProps
+	const { values, errors, onChange, setFieldsValue, syncFormItem } = ctxProps
 
-	const value = name ? values[name] : undefined
-	const error = errors.find(err => err.name === name)
-	const hasError = error !== undefined
+	const value = name && values?.[name]
+	const error = errors?.find(err => err.name === name)
+	const isError = error !== undefined
 
-	const callback: ICallback = desc => {
-		if (name) {
-			if (desc) {
-				setFieldError({ name, desc })
-			} else {
-				cleanFieldError(name)
+	React.useEffect(
+		() => {
+			if (name) {
+				syncFormItem(name, validator)
+				setFieldsValue({ [name]: initialValue })
 			}
-		}
-	}
+		},
+		// contextProps 不要放到 deps 里
+		[]
+	)
 
-	const onCustomChange: IOnChange = (value, name) => {
-		validator && validator(value, callback)
-		return onChange(value, name)
-	}
-
-	React.useEffect(() => {
-		if (name && setFieldsValue) {
-			setFieldsValue({ [name]: initialValue })
-		}
-	}, [])
-
-	const newProps = { value, name, error: hasError, onChange: onCustomChange }
+	const newProps = { name, value, error: isError, onChange }
 
 	const classes = useStyles()
 

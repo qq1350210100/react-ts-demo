@@ -68,7 +68,6 @@ const Select: React.FC<ISelectProps> = props => {
 		defaultValue = '',
 		color = ThemeNames.PRIMARY,
 		value = defaultValue,
-		error = false,
 		onChange = () => {}
 	} = props
 
@@ -99,7 +98,7 @@ const Select: React.FC<ISelectProps> = props => {
 	}
 	const classes = useStyles(styleProps)
 
-	const handleSetOption = value => {
+	const handleSetOption = (value: string) => {
 		if (children) {
 			React.Children.forEach(children, (child: JSX.Element) => {
 				if (child?.props?.value === value) {
