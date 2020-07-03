@@ -129,6 +129,13 @@ const navMap = [
 	}
 ]
 
+const delay = timeout =>
+	new Promise((res, rej) => {
+		setTimeout(() => {
+			res(timeout)
+		}, timeout)
+	})
+
 const App: React.FC<IAppProps> = () => {
 	const classes = useStyles()
 
@@ -196,18 +203,41 @@ const App: React.FC<IAppProps> = () => {
 	const validateRequred = async (value, callback) => {
 		// console.log('validate: ', value)
 		if (!value) {
+			// await delay(2000)
 			callback('必填！')
 		} else {
 			callback()
 		}
 	}
 
+	const validateLength = async (value, callback) => {
+		// console.log('validate: ', value)
+		if (value.length < 5) {
+			callback('必填！')
+		} else {
+			callback()
+		}
+	}
+
+	const handleValidate = async() => {
+		try {
+			const res = await form.validateFields('password', 'input')
+			console.log('res: ', res);
+			
+		} catch (error) {
+			console.log('error: ', error);
+			
+		}
+	}
+
 	React.useEffect(() => {
 		setTimeout(() => {
-			console.log('excute timeout')
-			// form.setFieldsValue({ input: '', password: 'password', select: 'female', switch: true })
-			form.validateFields('password')
+		// 	console.log('excute timeout')
+		// 	// form.setFieldsValue({ input: '', password: 'password', select: 'female', switch: true })
+		// 	form.validateFields('password')
+		// form.setFieldsValue({ input: '', password: '' })
 		}, 4000)
+		// form.validateFields('password')
 	}, [])
 
 	return (
@@ -283,7 +313,7 @@ const App: React.FC<IAppProps> = () => {
 			<Form
 				className={classes.form}
 				form={form}
-				initialValues={{ input: 'Test form set value' }}
+				// initialValues={{ input: 'Test form set value' }}
 				onValuesChange={handleFormChange}
 				onFinished={handleFinished}
 				onFailed={handleFailed}
@@ -306,11 +336,12 @@ const App: React.FC<IAppProps> = () => {
 				</Form.Item>
 				<Form.Item>
 					<div>
-					<Button htmlType="submit" color="primary" onClick={handleClick}>
-						提交
-					</Button>
+						<Button htmlType="submit" color="primary" onClick={handleClick}>
+							提交
+						</Button>
 					</div>
 				</Form.Item>
+				<Button onClick={handleValidate}>校验</Button>
 			</Form>
 		</div>
 	)

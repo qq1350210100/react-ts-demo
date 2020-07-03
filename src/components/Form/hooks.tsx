@@ -35,7 +35,7 @@ export interface IOnChange {
 }
 
 export interface ISubmit {
-	(): Promise<IValues | IErrors>
+	(): Promise<IValues | IErrors> | any
 }
 
 export interface IGetFieldsValue {
@@ -106,40 +106,34 @@ export const useForm = (): IForm => {
 	}
 
 	const _validate = React.useCallback(
-		(item: IItem): Promise<validateState> =>
-			new Promise((resolve, reject) => {
-				const { value, name, validator } = item
-				if (validator) {
-					const callback: ICallback = desc => {
-						if (desc) {
-							_setFieldError({ name, desc, validator })
-							reject(validateState.REJECTED)
-						} else {
-							_cleanFieldError(name)
-							resolve(validateState.FULFILLED)
-						}
+		async (item: IItem): Promise<validateState> => {
+			const { value, name, validator } = item
+			let result = validateState.FULFILLED
+			if (validator) {
+				const callback: ICallback = desc => {
+					if (desc) {
+						_setFieldError({ name, desc, validator })
+						result = validateState.REJECTED
+					} else {
+						_cleanFieldError(name)
 					}
-					validator(value, callback)
-				} else {
-					resolve(validateState.FULFILLED)
 				}
-			}),
+				await validator(value, callback)
+			}
+			return result
+		},
 		[_setFieldError, _cleanFieldError]
 	)
 
 	/**
 	 * 批量校验表单项：
-	 * 为什么用 Promise.allSettled 而不是 for await of 执行校验？
-	 * - 因为表单 validator 返回的 promise。allSettled 异步执行promise，而 for await of 需要 await 每一个 validator 执行完毕
-	 * 都能获取所有结果，为什么不用 Promise.all
-	 * - 因为使用 Promise.all 时，promises 中，只要有任意一个 validator rejected，就取不到结果
 	 */
 	const _validateItems = React.useCallback(
 		async (items: IItem[]): Promise<validateState> => {
 			const validators = items.map(_validate)
-			const results = await Promise.allSettled(validators)
+			const results = await Promise.all(validators)
 
-			return results.some(result => result.status === validateState.REJECTED)
+			return results.some(result => result === validateState.REJECTED)
 				? validateState.REJECTED
 				: validateState.FULFILLED
 		},
@@ -147,7 +141,6 @@ export const useForm = (): IForm => {
 	)
 
 	const _mergeItems = (name: string, value: IValue) => {
-		// console.log('11111111', name)
 		setItems(prev => prev.map(item => (item.name === name ? { ...item, value } : item)))
 	}
 
@@ -165,7 +158,8 @@ export const useForm = (): IForm => {
 	// 函数传递给 FormItem 调用，将props同步到form
 	const syncFormItem: ISyncFormItem = (name, validator) => {
 		if (name) {
-			setItems(prev => [...prev, { name, validator }])
+			const newItem = { name, validator }
+			setItems(prev => [...prev, newItem])
 		}
 	}
 
@@ -196,27 +190,21 @@ export const useForm = (): IForm => {
 	const validateFields: IValidateFields = React.useCallback(
 		(...names) =>
 			new Promise((resolve, reject) => {
+				const receiveResult = (res: validateState) => {
+					if (res === validateState.REJECTED) {
+						reject(res)
+					} else {
+						resolve(res)
+					}
+				}
+
 				// 区分参数，names不传即校验全部
 				if (names.length) {
 					const namesSet = new Set(names)
 					const targets = items.filter(item => namesSet.has(item.name))
-					console.log('items: ', items)
-					console.log('targets: ', targets)
-					_validateItems(targets).then(res => {
-						if (res === validateState.REJECTED) {
-							reject(res)
-						} else {
-							resolve(res)
-						}
-					})
+					_validateItems(targets).then(receiveResult)
 				} else {
-					_validateItems(items).then(res => {
-						if (res === validateState.REJECTED) {
-							reject(res)
-						} else {
-							resolve(res)
-						}
-					})
+					_validateItems(items).then(receiveResult)
 				}
 			}),
 		[items, _validateItems]
@@ -224,21 +212,15 @@ export const useForm = (): IForm => {
 
 	const submit: ISubmit = React.useCallback(
 		() =>
-			new Promise((resolve, reject) => {
-				validateFields().then(
-					res => {
-						if (res === validateState.FULFILLED) {
-							resolve(values)
-						}
-					},
-					err => {
-						if (err === validateState.REJECTED) {
-							reject(errors)
-						}
-					}
-				)
+			new Promise(async (resolve, reject) => {
+				try {
+					await validateFields()
+					resolve(values)
+				} catch (err) {
+					reject(err)
+				}
 			}),
-		[values, errors, validateFields]
+		[values, validateFields]
 	)
 
 	React.useEffect(
@@ -247,7 +229,10 @@ export const useForm = (): IForm => {
 				items.forEach(item => {
 					// 只校验表单值变更项
 					if (origin === item.name) {
-						validateFields(origin)
+						validateFields(origin).then(
+							() => {},
+							() => {}
+						)
 					}
 				})
 			}
@@ -255,10 +240,6 @@ export const useForm = (): IForm => {
 		// deps 不添加 validateFields，因为 validateFields deps 已经添加过 items
 		[items, origin]
 	)
-
-	React.useEffect(() => {
-		// console.log('items', items)
-	}, [items])
 
 	return {
 		onChange,

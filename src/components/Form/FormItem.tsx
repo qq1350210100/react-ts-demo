@@ -72,8 +72,8 @@ const FormItem: React.FC<IFormItemProps> = props => {
 	const formItemCls = clsx(classes.root, className)
 
 	return (
-		<label className={formItemCls}>
-			{label && <span className={classes.labelText}>{label}：</span>}
+		<div className={formItemCls}>
+			{label && <label className={classes.labelText}>{label}：</label>}
 			<div>
 				{React.Children.map(children as any, (child: JSX.Element) => {
 					const baseProps = { name, value, onChange }
@@ -83,7 +83,7 @@ const FormItem: React.FC<IFormItemProps> = props => {
 				})}
 				<span className={classes.tip}>{error?.desc}</span>
 			</div>
-		</label>
+		</div>
 	)
 }
 

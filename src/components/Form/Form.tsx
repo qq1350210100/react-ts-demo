@@ -1,7 +1,7 @@
 import React from 'react'
 import { makeStyles, createStyles } from '@material-ui/styles'
 import clsx from 'clsx'
-import { IForm, IValues, useForm, IErrors } from './hooks'
+import { IForm, IValues, useForm } from './hooks'
 
 export interface ICallback {
 	(desc: string): void
