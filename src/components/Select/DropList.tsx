@@ -13,36 +13,39 @@ export interface IDropListProps extends ITransitionOpts {
 
 interface IStyleProps {
 	timeout: number
+	childCount: number
 }
 
 const useStyles = makeStyles(
 	createStyles({
-		root: {
-			width: '100%',
+		root: ({ timeout, childCount }: IStyleProps) => ({
+			zIndex: 999,
+			minWidth: '100%',
 			maxHeight: 160,
 			position: 'absolute',
 			top: 36,
 			left: 0,
-			padding: '4px 0',
+			right: 0,
+			paddingTop: 4,
+			paddingBottom: 4,
 			borderRadius: 4,
 			boxShadow: '0 4px 24px rgba(26,26,26,.14)',
 			transformOrigin: 'center 0',
 			cursor: 'pointer',
-			overflowX: 'hidden',
-			overflowY: 'auto'
-		},
+			// 为何不直接 auto？因为 hidden 时右边距多了1px的 bug
+			overflowY: childCount > 5 ? 'auto' : 'unset',
+			animationDuration: `${timeout}ms`
+		}),
 		enter: {
-			animation: '$kf_enter ease-out',
-			animationDuration: ({ timeout }: IStyleProps) => `${timeout}ms`
+			animation: '$kf_enter ease-out'
 		},
 		leave: {
-			animation: '$kf_leave ease-out',
-			animationDuration: ({ timeout }: IStyleProps) => `${timeout}ms`
+			animation: '$kf_leave ease-out'
 		},
 		'@keyframes kf_enter': {
 			'0%': {
 				opacity: 0,
-				transform: 'scaleY(0)'
+				transform: 'scaleY(.9)'
 			},
 			'100%': {
 				opacity: 1,
@@ -56,18 +59,28 @@ const useStyles = makeStyles(
 			},
 			'100%': {
 				opacity: 0,
-				transform: 'scaleY(0)'
+				transform: 'scaleY(.9)'
 			}
 		}
 	})
 )
 
 const DropList: React.FC<IDropListProps> = props => {
-	const { children, timeout = 100, in: inProp, onExited = () => {}, selected, handleChange } = props
+	const {
+		children,
+		timeout = 150,
+		in: inProp = false,
+		onExited = () => {},
+		selected,
+		handleChange
+	} = props
 
 	useTransition({ in: inProp, onExited, timeout })
 
-	const classes = useStyles({ timeout })
+	const childCount = React.Children.count(children)
+
+	const styleProps: IStyleProps = { timeout, childCount }
+	const classes = useStyles(styleProps)
 
 	const dropListCls = clsx(classes.root, inProp ? classes.enter : classes.leave)
 

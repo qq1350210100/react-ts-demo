@@ -60,4 +60,6 @@ const Collapse: React.FC<ICollpaseProps> = props => {
 	)
 }
 
-export default Collapse
+Collapse.displayName = 'Collapse'
+
+export default React.memo(Collapse)

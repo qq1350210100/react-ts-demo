@@ -11,4 +11,6 @@ interface IPopupExports
 const Popup = _Popup as IPopupExports
 Popup.usePopupVisible = usePopupVisible
 
+Popup.displayName = 'Popup'
+
 export default Popup

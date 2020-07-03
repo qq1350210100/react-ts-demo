@@ -12,4 +12,6 @@ interface IButtonExports
 const Button = _Button as IButtonExports
 Button.Icon = _IconButton
 
+Button.displayName = 'Button'
+
 export default Button

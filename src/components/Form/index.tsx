@@ -12,4 +12,6 @@ const Form = _Form as IFormExports
 Form.Item = _FormItem
 Form.useForm = useForm
 
+Form.displayName = 'Form'
+
 export default Form

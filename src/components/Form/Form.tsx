@@ -13,7 +13,7 @@ export interface IFormProps extends React.FormHTMLAttributes<HTMLFormElement> {
 	initialValues?: IValues
 	onValuesChange?: (values?: IValues) => void
 	onFinished?: (values: IValues) => void
-	onFailed?: (errors: IErrors) => void
+	onFailed?: () => void
 }
 
 const useStyles = makeStyles(
@@ -64,7 +64,7 @@ const Form: React.FC<IFormProps> = props => {
 					return res
 				},
 				err => {
-					onFailed(err as IErrors)
+					onFailed()
 					return err
 				}
 			),

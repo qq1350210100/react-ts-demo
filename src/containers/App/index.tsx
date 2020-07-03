@@ -47,6 +47,9 @@ const useStyles = makeStyles(
 		},
 		form: {
 			maxWidth: 400
+		},
+		select: {
+			minWidth: 100
 		}
 	})
 )
@@ -152,10 +155,11 @@ const App: React.FC<IAppProps> = () => {
 	}
 
 	const handleFormChange = values => {
-		// console.log('values: ', values)
+		console.log('values: ', values)
 	}
 
 	const handleClick = async () => {
+		console.log('handleClick')
 		// form.submit().then(res => {
 		// 	console.log('res: ', res);
 		// }, err => {
@@ -185,8 +189,8 @@ const App: React.FC<IAppProps> = () => {
 		console.log('handleFinished: ', values)
 	}
 
-	const handleFailed = errors => {
-		console.log('handleFailed: ', errors)
+	const handleFailed = () => {
+		console.log('handleFailed: ')
 	}
 
 	const validateRequred = async (value, callback) => {
@@ -200,7 +204,9 @@ const App: React.FC<IAppProps> = () => {
 
 	React.useEffect(() => {
 		setTimeout(() => {
-			form.setFieldsValue({ input: '', password: 'password', select: 'female', switch: true })
+			console.log('excute timeout')
+			// form.setFieldsValue({ input: '', password: 'password', select: 'female', switch: true })
+			form.validateFields('password')
 		}, 4000)
 	}, [])
 
@@ -268,7 +274,7 @@ const App: React.FC<IAppProps> = () => {
 			</div> */}
 
 			{/* <Select defaultValue="warning" onChange={hanldeSearch}>
-				<Select.Option value="primary">湛蓝湛蓝湛蓝湛蓝</Select.Option>
+				<Select.Option value="primary">湛蓝</Select.Option>
 				<Select.Option value="success">碧绿</Select.Option>
 				<Select.Option value="error">粉红</Select.Option>
 				<Select.Option value="warning">橙黄</Select.Option>
@@ -292,16 +298,18 @@ const App: React.FC<IAppProps> = () => {
 					<Switch />
 				</Form.Item>
 				<Form.Item name="select" label="性别" initialValue="male">
-					<Select defaultValue="all">
+					<Select defaultValue="all" className={classes.select}>
 						<Select.Option value="all">全部</Select.Option>
 						<Select.Option value="male">男</Select.Option>
 						<Select.Option value="female">女</Select.Option>
 					</Select>
 				</Form.Item>
 				<Form.Item>
+					<div>
 					<Button htmlType="submit" color="primary" onClick={handleClick}>
 						提交
 					</Button>
+					</div>
 				</Form.Item>
 			</Form>
 		</div>

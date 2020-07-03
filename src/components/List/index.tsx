@@ -8,4 +8,6 @@ interface IListExports extends React.MemoExoticComponent<React.FC<IListProps>> {
 const List = _List as IListExports
 List.Item = _ListItem
 
+List.displayName = 'List'
+
 export default List

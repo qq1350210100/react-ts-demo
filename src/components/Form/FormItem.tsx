@@ -67,8 +67,6 @@ const FormItem: React.FC<IFormItemProps> = props => {
 		[]
 	)
 
-	const newProps = { name, value, error: isError, onChange }
-
 	const classes = useStyles()
 
 	const formItemCls = clsx(classes.root, className)
@@ -77,9 +75,12 @@ const FormItem: React.FC<IFormItemProps> = props => {
 		<label className={formItemCls}>
 			{label && <span className={classes.labelText}>{label}：</span>}
 			<div>
-				{React.Children.map(children as any, (child: JSX.Element) =>
-					React.cloneElement(child, newProps)
-				)}
+				{React.Children.map(children as any, (child: JSX.Element) => {
+					const baseProps = { name, value, onChange }
+					return child?.type?.displayName === 'Input'
+						? React.cloneElement(child, { ...baseProps, error: isError })
+						: React.cloneElement(child, baseProps)
+				})}
 				<span className={classes.tip}>{error?.desc}</span>
 			</div>
 		</label>

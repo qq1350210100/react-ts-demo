@@ -20,13 +20,13 @@ interface IStyleProps {
 }
 
 const useStyles = makeStyles({
-	root: ({ color, isCurrent }: IStyleProps) => ({
+	root: ({ color, isCurrent, timeout }: IStyleProps) => ({
 		display: 'flex',
 		alignItems: 'center',
-		position: 'relative',
-		width: '100%',
+		width: 'inherit',
 		height: 32,
-		transition: 'background 100ms',
+		background: 'tranparent',
+		transition: `background ${timeout}ms`,
 
 		'&:hover': {
 			background: 'rgba(160, 160, 160, .1)'
@@ -44,7 +44,8 @@ const useStyles = makeStyles({
 			: {})
 	}),
 	text: {
-		marginLeft: 8,
+		marginLeft: 12,
+		marginRight: 12,
 		whiteSpace: 'nowrap',
 		textOverflow: 'ellipsis',
 		overflow: 'hidden'

@@ -50,4 +50,6 @@ const Divider: React.FC<IDividerProps> = props => {
 	)
 }
 
+Divider.displayName = 'Divider'
+
 export default React.memo(Divider)

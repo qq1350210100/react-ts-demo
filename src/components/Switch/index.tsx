@@ -31,11 +31,11 @@ const useStyles = makeStyles(
 			width: 40,
 			height: 20,
 			position: 'relative',
-			background: checked ? color.main : '#fcfcfc',
+			background: checked ? color.main : '#fdfdfd',
 			paddingLeft: 4,
 			paddingRight: 4,
 			borderRadius: 10,
-			border: checked ? 'rgba(0,0,0,0)' : '1px solid #e2e2e2',
+			border: checked ? 'rgba(0,0,0,0)' : '1px solid #d9d9d9',
 			opacity: disabled ? 0.5 : 1,
 			cursor: disabled ? 'not-allowed' : 'pointer',
 			transition: 'border .2s, background .2s',
@@ -103,5 +103,7 @@ const Switch: React.FC<ISwitchProps> = props => {
 		</ButtonBase>
 	)
 }
+
+Switch.displayName = 'Switch'
 
 export default React.memo(Switch)

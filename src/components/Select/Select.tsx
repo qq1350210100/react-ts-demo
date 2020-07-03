@@ -1,7 +1,7 @@
 import React from 'react'
 import { makeStyles, createStyles } from '@material-ui/styles'
 import clsx from 'clsx'
-import { CaretDownFilled } from '@ant-design/icons'
+import { DownOutlined } from '@ant-design/icons'
 import { TransitionGroup } from 'react-transition-group'
 import { ThemeNames, IColors, selectColor } from 'common/themeColors'
 import DropList from './DropList'
@@ -31,32 +31,34 @@ const useStyles = makeStyles(
 	createStyles({
 		root: {
 			minWidth: 104,
-			minHeight: 32,
+			height: 32,
 			position: 'relative',
 			cursor: 'pointer',
 			userSelect: 'none'
 		},
-		select: ({ dropVisible, color }: IStyleProps) => ({
+		select: ({ dropVisible }: IStyleProps) => ({
 			boxSizing: 'border-box',
 			display: 'flex',
 			alignItems: 'center',
 			justifyContent: 'space-between',
 			width: '100%',
 			height: 32,
-			background: '#fcfcfc',
-			paddingLeft: 8,
-			paddingRight: 8,
+			background: '#fdfdfd',
+			paddingLeft: 12,
+			paddingRight: 12,
 			borderRadius: 4,
-			border: `1px solid ${dropVisible ? color.bright : '#e2e2e2'}`,
-			color: dropVisible ? '#606266' : '#303133',
+			border: '1px solid #d9d9d9',
+			color: dropVisible ? '#909399' : '#303133',
 			transition: 'all 100ms'
 		}),
-		dropDownIcon: {
-			color: '#606266',
+		desc: {
+			marginRight: 16
+		},
+		dropDownIcon: ({ dropVisible }: IStyleProps) => ({
 			fontSize: 11,
-			transform: ({ dropVisible }: IStyleProps) => (dropVisible ? 'rotate(180deg)' : 'rotate(0)'),
-			transition: 'transform 100ms'
-		}
+			transform: dropVisible ? 'rotate(180deg)' : 'rotate(0)',
+			transition: 'all 100ms'
+		})
 	})
 )
 
@@ -135,9 +137,9 @@ const Select: React.FC<ISelectProps> = props => {
 	return (
 		<div className={containerCls}>
 			<div className={classes.select} onClick={handleShowDrop}>
-				{selected.desc}
+				<span className={classes.desc}>{selected.desc}</span>
 				<span className={classes.dropDownIcon}>
-					<CaretDownFilled />
+					<DownOutlined />
 				</span>
 			</div>
 			<TransitionGroup component={null}>

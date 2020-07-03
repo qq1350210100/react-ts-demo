@@ -13,4 +13,6 @@ const Loading = _Loading as ILoadingExports
 Loading.Bounce = _Bounce
 Loading.Line = _Line
 
+Loading.displayName = 'Loading'
+
 export default Loading

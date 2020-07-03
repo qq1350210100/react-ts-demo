@@ -9,4 +9,6 @@ interface ISelectExports
 const Select = _Select as ISelectExports
 Select.Option = _Option
 
+Select.displayName = 'Select'
+
 export default Select

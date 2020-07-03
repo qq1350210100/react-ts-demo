@@ -52,7 +52,7 @@ const useStyles = makeStyles(
 		},
 		input: ({ color, focus, disabled, error, type }: IStyleProps) => {
 			const errorColor = selectColor(ThemeNames.ERROR)
-			const bdColor = error ? errorColor.main : focus ? color.main : '#e5e5e5'
+			const bdColor = error ? errorColor.main : focus ? color.main : '#d9d9d9'
 			const bdWidth = focus ? '2px' : '6px'
 			const bxsColor = hex2Rgba(error ? errorColor.main : color.main, focus ? 0.7 : 0)
 			return {

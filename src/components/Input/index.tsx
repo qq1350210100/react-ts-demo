@@ -17,4 +17,6 @@ Input.Search = _Search
 Input.TextArea = _TextArea
 Input.Group = _Group
 
+Input.displayName = 'Input'
+
 export default Input
