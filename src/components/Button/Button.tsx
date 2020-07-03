@@ -83,6 +83,19 @@ const _Button: React.ForwardRefRenderFunction<unknown, IButtonProps> = (props, r
 
 	const btnCls = clsx(classes.btn, className)
 
+	const renderChildren: <T>(children: T) => T | string = children => {
+		if (
+			typeof children === 'string' &&
+			children.length === 2 &&
+			!/[^\u4e00-\u9fa5]/.test(children)
+		) {
+			// 两字中文中间加空格
+			return children[0] + ' ' + children[1]
+		} else {
+			return children
+		}
+	}
+
 	return (
 		<ButtonBase
 			type="button"
@@ -94,8 +107,8 @@ const _Button: React.ForwardRefRenderFunction<unknown, IButtonProps> = (props, r
 			onMouseUp={handleStop}
 			onMouseLeave={handleStop}
 		>
-			{<TouchRipple ref={rippleRef} color={color} />}
-			{children}
+			<TouchRipple ref={rippleRef} color={color} />
+			{renderChildren<React.ReactNode>(children)}
 		</ButtonBase>
 	)
 }

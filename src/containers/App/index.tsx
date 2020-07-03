@@ -219,23 +219,21 @@ const App: React.FC<IAppProps> = () => {
 		}
 	}
 
-	const handleValidate = async() => {
+	const handleValidate = async () => {
 		try {
 			const res = await form.validateFields('password', 'input')
-			console.log('res: ', res);
-			
+			console.log('res: ', res)
 		} catch (error) {
-			console.log('error: ', error);
-			
+			console.log('error: ', error)
 		}
 	}
 
 	React.useEffect(() => {
 		setTimeout(() => {
-		// 	console.log('excute timeout')
-		// 	// form.setFieldsValue({ input: '', password: 'password', select: 'female', switch: true })
-		// 	form.validateFields('password')
-		// form.setFieldsValue({ input: '', password: '' })
+			// 	console.log('excute timeout')
+			// 	// form.setFieldsValue({ input: '', password: 'password', select: 'female', switch: true })
+			// 	form.validateFields('password')
+			// form.setFieldsValue({ input: '', password: '' })
 		}, 4000)
 		// form.validateFields('password')
 	}, [])
@@ -313,7 +311,7 @@ const App: React.FC<IAppProps> = () => {
 			<Form
 				className={classes.form}
 				form={form}
-				// initialValues={{ input: 'Test form set value' }}
+				initialValues={{ input: 'Test form set value' }}
 				onValuesChange={handleFormChange}
 				onFinished={handleFinished}
 				onFailed={handleFailed}
@@ -341,7 +339,6 @@ const App: React.FC<IAppProps> = () => {
 						</Button>
 					</div>
 				</Form.Item>
-				<Button onClick={handleValidate}>校验</Button>
 			</Form>
 		</div>
 	)
